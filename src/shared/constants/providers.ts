@@ -1,0 +1,3 @@
+export const PROVIDERS = {
+  ENV_CONFIG_SERVICE: 'ENV_CONFIG_SERVICE',
+};
