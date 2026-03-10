@@ -3,9 +3,9 @@ import { ConfigService } from '@nestjs/config';
 
 export class EnvConfigServiceImpl implements EnvConfigService {
   constructor(private readonly configService: ConfigService) {}
-  getAllowedOrigins(): string[] {
-    return (this.configService.get<string>('ALLOWED_ORIGINS')as string).split(',');
-  }
+  // getAllowedOrigins(): string[] {
+  //   return (this.configService.get<string>('ALLOWED_ORIGIN')as string).split(',');
+  // }
 
   getPort(): number {
     return +(this.configService.get<string>('PORT') as string);

@@ -1,5 +1,5 @@
 export interface EnvConfigService {
-  getAllowedOrigins(): string[]
+  // getAllowedOrigins(): string[]
   getPort(): number;
   getSupabaseKey(): string;
   getSupabaseUrl(): string

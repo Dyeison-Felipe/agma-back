@@ -22,15 +22,6 @@ export async function globalConfig(
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, documentFactory);
 
-
-  const origins = envConfig.getAllowedOrigins();
-  app.enableCors({
-    origin: origins,
-    methods: 'GET,PUT,POST,DELETE',
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  });
-
   // GLOBAL PIPES
     app.useGlobalPipes(
     new ValidationPipe({

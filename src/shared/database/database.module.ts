@@ -20,7 +20,7 @@ import { DataSource } from 'typeorm';
         entities: [`${__dirname}/../../core/**/entities/{.ts,*.js}`],
         migrations: [`${__dirname}/migrations/{.ts,*.js}`],
         migrationsRun: configService.getMigrationRun(),
-        synchronize: true,
+        synchronize: false,
         logging: configService.getDbLogs(),
       }),
       async dataSourceFactory(options) {

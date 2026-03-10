@@ -1,0 +1,13 @@
+{
+  "configurations": [
+    {
+      "name": "Agma debug",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "restart": true,
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMaps": true
+    }
+  ]
+}
