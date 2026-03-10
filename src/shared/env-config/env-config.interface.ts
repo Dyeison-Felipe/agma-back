@@ -1,6 +1,8 @@
 export interface EnvConfigService {
+  getAllowedOrigins(): string[]
   getPort(): number;
-  getServiceKeySupabase(): string;
+  getSupabaseKey(): string;
+  getSupabaseUrl(): string
   getDbHost(): string;
   getDbPort(): number;
   getDbUsername(): string;

@@ -17,10 +17,10 @@ import { DataSource } from 'typeorm';
         username: configService.getDbUsername(),
         password: configService.getDbPassword(),
         database: configService.getDbName(),
-        entities: [],
+        entities: [`${__dirname}/../../core/**/entities/{.ts,*.js}`],
         migrations: [`${__dirname}/migrations/{.ts,*.js}`],
         migrationsRun: configService.getMigrationRun(),
-        synchronize: false,
+        synchronize: true,
         logging: configService.getDbLogs(),
       }),
       async dataSourceFactory(options) {

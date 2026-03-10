@@ -6,6 +6,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { initializeTransactionalContext, StorageDriver } from 'typeorm-transactional';
+import { globalConfig } from './global-config';
 
 async function bootstrap() {
   initializeTransactionalContext({ storageDriver: StorageDriver.AUTO });
@@ -16,6 +17,8 @@ async function bootstrap() {
   );
 
   const envConfig = app.get(PROVIDERS.ENV_CONFIG_SERVICE);
+
+  globalConfig(app, envConfig)
 
   await app.listen(envConfig.getPort() ?? '0.0.0.0');
 

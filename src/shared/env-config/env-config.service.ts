@@ -3,6 +3,9 @@ import { ConfigService } from '@nestjs/config';
 
 export class EnvConfigServiceImpl implements EnvConfigService {
   constructor(private readonly configService: ConfigService) {}
+  getAllowedOrigins(): string[] {
+    return (this.configService.get<string>('ALLOWED_ORIGINS')as string).split(',');
+  }
 
   getPort(): number {
     return +(this.configService.get<string>('PORT') as string);
@@ -36,7 +39,11 @@ export class EnvConfigServiceImpl implements EnvConfigService {
     return this.configService.get<string>('DB_LOGS') === 'true';
   }
 
-  getServiceKeySupabase(): string {
+  getSupabaseKey(): string {
     return this.configService.get<string>('SUPABASE_SERVICE_KEY') as string;
+  }
+
+  getSupabaseUrl(): string {
+    return this.configService.get<string>('SUPABASE_URL') as string;
   }
 }
