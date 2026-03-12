@@ -1,8 +1,8 @@
-import { IsNotEmpty, IsString, Max } from 'class-validator';
+import { IsNotEmpty, IsString, Max, MaxLength } from 'class-validator';
 
 export class CreateTransparencyTypeDto {
   @IsString()
   @IsNotEmpty()
-  @Max(150)
+  @MaxLength(150)
   name: string;
 }

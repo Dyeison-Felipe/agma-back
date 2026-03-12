@@ -7,6 +7,8 @@ import { SupabaseService } from './supabase..interface';
 @Injectable()
 export class SupabaseServiceImpl implements SupabaseService {
   private supabase;
+  private url;
+  private key;
 
   constructor(
     @Inject(PROVIDERS.ENV_CONFIG_SERVICE)
@@ -16,11 +18,13 @@ export class SupabaseServiceImpl implements SupabaseService {
       envConfig.getSupabaseUrl(),
       envConfig.getSupabaseKey(),
     );
+    this.url = envConfig.getSupabaseUrl();
+    this.key = envConfig.getSupabaseKey();
   }
 
   async uploadPdf(buffer: Buffer, fileName: string): Promise<string> {
     const { data, error } = await this.supabase.storage
-      .from('pdf-files')
+      .from('agma')
       .upload(fileName, buffer, {
         contentType: 'application/pdf',
       })
@@ -30,7 +34,7 @@ export class SupabaseServiceImpl implements SupabaseService {
     }
 
     const { data: publicUrl } = this.supabase.storage
-      .from('pdf-files')
+      .from('agma')
       .getPublicUrl(fileName)
 
     return publicUrl.publicUrl

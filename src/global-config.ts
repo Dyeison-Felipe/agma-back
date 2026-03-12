@@ -30,6 +30,10 @@ export async function globalConfig(
     }),
   );
 
-  await app.register(multipart)
+  await app.register(multipart, {
+    limits: {
+      fileSize: 10 * 1024 * 1024, // 10MB
+    }
+  });
 
 }

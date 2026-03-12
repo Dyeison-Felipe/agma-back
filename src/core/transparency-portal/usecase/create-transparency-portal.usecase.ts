@@ -5,10 +5,11 @@ import { PROVIDERS } from '@/shared/constants/providers';
 import type { SupabaseService } from '@/shared/supabase/supabase..interface';
 import type { TransparencyTypeRepository } from '@/core/transparency-type/transparency-type.interface';
 import { TransparencyPortalOutput } from '@/shared/output/transparency-portal.output';
+import { FileDto } from '@/shared/dto/file.dto';
 
 type Input = {
   transparencyType: string;
-  fileBuffer: Buffer;
+  fileBuffer: FileDto;
 };
 
 type Output = TransparencyPortalOutput
@@ -33,7 +34,7 @@ export class CreateTransparencyPortalUseCase implements UseCase<Input, Output> {
     const fileName = `${crypto.randomUUID()}.pdf`
 
     const filepath = await this.supabaseService.uploadPdf(
-      input.fileBuffer,
+      input.fileBuffer.buffer,
       fileName,
     );
 

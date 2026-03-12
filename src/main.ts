@@ -19,7 +19,7 @@ async function bootstrap() {
   const envConfig = app.get(PROVIDERS.ENV_CONFIG_SERVICE);
   console.log(`Running in port ${envConfig.getPort() ?? '0.0.0.0'}`)
 
-  globalConfig(app, envConfig)
+  await globalConfig(app, envConfig)
 
   await app.listen(envConfig.getPort() ?? '0.0.0.0');
 
