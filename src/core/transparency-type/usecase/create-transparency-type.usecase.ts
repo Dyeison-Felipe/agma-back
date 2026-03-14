@@ -8,7 +8,7 @@ type Input = {
   name: string;
 };
 
-type Output = TransparencyTypeOutput
+type Output = TransparencyTypeOutput;
 
 export class CreateTransparencyTypeUseCase implements UseCase<Input, Output> {
   constructor(
@@ -19,6 +19,8 @@ export class CreateTransparencyTypeUseCase implements UseCase<Input, Output> {
     const saveTransparencyType = await this.transparencyTypeRepository.create({
       id: crypto.randomUUID(),
       name: input.name,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
     if (!saveTransparencyType) {

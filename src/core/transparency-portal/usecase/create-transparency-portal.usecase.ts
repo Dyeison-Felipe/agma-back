@@ -31,7 +31,7 @@ export class CreateTransparencyPortalUseCase implements UseCase<Input, Output> {
       throw new Error(`Tipo não encontrado`);
     }
 
-    const fileName = `${crypto.randomUUID()}.pdf`
+    const fileName = `${crypto.randomUUID()}${input.fileBuffer.extension}`
 
     const filepath = await this.supabaseService.uploadPdf(
       input.fileBuffer.buffer,
@@ -44,9 +44,11 @@ export class CreateTransparencyPortalUseCase implements UseCase<Input, Output> {
 
     const savedTransparency = await this.transparencyRepository.create({
       id: crypto.randomUUID(),
-      name: fileName,
+      name: input.fileBuffer.filename,
       path: filepath,
-      transparencyType: transparencyType
+      transparencyType: transparencyType,
+      createdAt: new Date(),
+      updatedAt: new Date()
     });
 
     const output: Output = {

@@ -17,6 +17,15 @@ export class SupabaseServiceImpl implements SupabaseService {
     this.supabase = createClient(
       envConfig.getSupabaseUrl(),
       envConfig.getSupabaseKey(),
+      {
+        auth: {
+          persistSession: false,
+        },
+        global: {
+          // Isso garante que o fetch não tenha problemas de timeout ou DNS
+          fetch: (...args) => fetch(...args),
+        },
+      },
     );
     this.url = envConfig.getSupabaseUrl();
     this.key = envConfig.getSupabaseKey();
@@ -27,16 +36,16 @@ export class SupabaseServiceImpl implements SupabaseService {
       .from('agma')
       .upload(fileName, buffer, {
         contentType: 'application/pdf',
-      })
+      });
 
     if (error) {
-      throw new Error(error.message)
+      throw new Error(error.message);
     }
 
     const { data: publicUrl } = this.supabase.storage
       .from('agma')
-      .getPublicUrl(fileName)
+      .getPublicUrl(fileName);
 
-    return publicUrl.publicUrl
+    return publicUrl.publicUrl;
   }
 }

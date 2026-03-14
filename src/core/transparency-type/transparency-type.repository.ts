@@ -12,13 +12,13 @@ export class TransparencyTypeRepositoryImpl implements TransparencyTypeRepositor
   ) {}
 
   async findById(id: string): Promise<TransparencyTypeEntity | null> {
-    const transparencyType =  await this.transparencyTypeRepository.findOne({
-      where: {id}
-    })
+    const transparencyType = await this.transparencyTypeRepository.findOne({
+      where: { id },
+    });
 
-    if(!transparencyType) return null;
+    if (!transparencyType) return null;
 
-    return transparencyType
+    return transparencyType;
   }
 
   async create(
