@@ -30,6 +30,8 @@ export class CreateTransparencyTypeUseCase implements UseCase<Input, Output> {
     const output: Output = {
       id: saveTransparencyType.id,
       name: saveTransparencyType.name,
+      createdAt: saveTransparencyType.createdAt,
+      updatedAt: saveTransparencyType.updatedAt,
     };
 
     return output;

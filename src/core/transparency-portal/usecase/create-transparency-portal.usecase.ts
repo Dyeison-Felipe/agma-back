@@ -6,9 +6,12 @@ import type { SupabaseService } from '@/shared/supabase/supabase..interface';
 import type { TransparencyTypeRepository } from '@/core/transparency-type/transparency-type.interface';
 import { TransparencyPortalOutput } from '@/shared/output/transparency-portal.output';
 import { FileDto } from '@/shared/dto/file.dto';
+import { SupabaseStorages } from '@/shared/enums/supabase-storages.enum';
 
 type Input = {
-  transparencyType: string;
+  transparencyType: {
+    id: string;
+  };
   fileBuffer: FileDto;
 };
 
@@ -25,7 +28,7 @@ export class CreateTransparencyPortalUseCase implements UseCase<Input, Output> {
 
   async execute(input: Input): Promise<Output> {
 
-    const transparencyType = await this.transparencyTypeRepository.findById(input.transparencyType);
+    const transparencyType = await this.transparencyTypeRepository.findById(input.transparencyType.id);
 
     if(!transparencyType) {
       throw new Error(`Tipo não encontrado`);
@@ -36,6 +39,7 @@ export class CreateTransparencyPortalUseCase implements UseCase<Input, Output> {
     const filepath = await this.supabaseService.uploadPdf(
       input.fileBuffer.buffer,
       fileName,
+      SupabaseStorages.TRANSPARENCY_PORTAL
     );
 
     if (!filepath) {

@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('transparencyportal')
+@Entity('transparency-portal')
 export class TransparencyPortalEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

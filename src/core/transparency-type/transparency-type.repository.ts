@@ -10,6 +10,10 @@ export class TransparencyTypeRepositoryImpl implements TransparencyTypeRepositor
     @InjectRepository(TransparencyTypeEntity)
     private readonly transparencyTypeRepository: Repository<TransparencyTypeEntity>,
   ) {}
+  async findAll(): Promise<TransparencyTypeEntity[]> {
+    const transparencys = await this.transparencyTypeRepository.find();
+    return transparencys;
+  }
 
   async findById(id: string): Promise<TransparencyTypeEntity | null> {
     const transparencyType = await this.transparencyTypeRepository.findOne({
