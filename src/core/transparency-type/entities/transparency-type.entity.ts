@@ -1,5 +1,13 @@
 import { TransparencyPortalEntity } from '@/core/transparency-portal/entities/transparency-portal.entity';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('transparency-type')
 export class TransparencyTypeEntity {
@@ -31,6 +39,9 @@ export class TransparencyTypeEntity {
   @OneToMany(
     () => TransparencyPortalEntity,
     (transparencyPortal) => transparencyPortal.transparencyType,
+    {
+      cascade: true,
+    },
   )
   transparencyPortal?: TransparencyPortalEntity[];
 }

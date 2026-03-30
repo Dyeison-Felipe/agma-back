@@ -3,6 +3,7 @@ import { UseCase } from '@/shared/usecase/usecase';
 import { Inject } from '@nestjs/common';
 import type { TransparencyTypeRepository } from '../transparency-type.interface';
 import { TransparencyTypeOutput } from '@/shared/output/transparency-type.output';
+import { NotFoundError } from '@/shared/errors/not-found-error';
 
 type Input = void;
 
@@ -15,6 +16,10 @@ export class FindAllTransparencyTypeUseCase implements UseCase<Input, Output> {
   ) {}
   async execute(input: Input): Promise<Output> {
     const transparency = await this.transparencyTypeRepository.findAll();
+
+    if (!transparency || transparency.length === 0) {
+      throw new NotFoundError(`Nenhum tipo de transparencia encontrado`);
+    }
 
     const output: Output = transparency.map((item) => ({
       id: item.id,

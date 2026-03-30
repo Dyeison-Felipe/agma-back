@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TransparencyPortalController } from './transparency-portal.controller';
 import { PROVIDERS } from '@/shared/constants/providers';
-import { TransparencyPortalServiceImpl } from './transparency-portal.service';
+import { TransparencyPortalServiceImpl } from './transparency-portal.repository';
 import { CreateTransparencyPortalUseCase } from './usecase/create-transparency-portal.usecase';
 import { TransparencyPortalRepository } from './transparency-portal.interface';
 import { SupabaseService } from '@/shared/supabase/supabase..interface';

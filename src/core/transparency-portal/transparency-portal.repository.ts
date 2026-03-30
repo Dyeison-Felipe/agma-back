@@ -13,9 +13,16 @@ export class TransparencyPortalServiceImpl implements TransparencyPortalReposito
     private readonly transparencyRepository: Repository<TransparencyPortalEntity>,
   ) {}
 
-  async create(entity: TransparencyPortalEntity): Promise<TransparencyPortalEntity> {
+  async softDeleteByTypeId(typeId: string): Promise<void> {
+    await this.transparencyRepository.softDelete({
+      transparencyType: { id: typeId },
+    });
+  }
 
-    const schema = this.transparencyRepository.create(entity)
+  async create(
+    entity: TransparencyPortalEntity,
+  ): Promise<TransparencyPortalEntity> {
+    const schema = this.transparencyRepository.create(entity);
 
     const save = await this.transparencyRepository.save(schema);
 

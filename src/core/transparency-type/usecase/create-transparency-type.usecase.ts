@@ -3,6 +3,8 @@ import { UseCase } from '@/shared/usecase/usecase';
 import { Inject } from '@nestjs/common';
 import type { TransparencyTypeRepository } from '../transparency-type.interface';
 import { TransparencyTypeOutput } from '@/shared/output/transparency-type.output';
+import { BadRequestError } from '@/shared/errors/bad-request-error';
+import { ConflictError } from '@/shared/errors/conflict-error';
 
 type Input = {
   name: string;
@@ -16,6 +18,13 @@ export class CreateTransparencyTypeUseCase implements UseCase<Input, Output> {
     private readonly transparencyTypeRepository: TransparencyTypeRepository,
   ) {}
   async execute(input: Input): Promise<Output> {
+
+    const transparencyType = await this.transparencyTypeRepository.findByName(input.name);
+
+    if(transparencyType) {
+      throw new ConflictError(`Já existe um tipo de transparência com o nome ${input.name}`)
+    }
+    
     const saveTransparencyType = await this.transparencyTypeRepository.create({
       id: crypto.randomUUID(),
       name: input.name,
@@ -24,7 +33,7 @@ export class CreateTransparencyTypeUseCase implements UseCase<Input, Output> {
     });
 
     if (!saveTransparencyType) {
-      throw new Error(`Ocorreu um erro ao salvar o tipo de transparencia`);
+      throw new BadRequestError(`Ocorreu um erro ao salvar o tipo de transparência`);
     }
 
     const output: Output = {

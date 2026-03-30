@@ -7,6 +7,8 @@ import { TransparencyTypeRepository } from './transparency-type.interface';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TransparencyTypeEntity } from './entities/transparency-type.entity';
 import { FindAllTransparencyTypeUseCase } from './usecase/find-all-transparency.usecase';
+import { UpdateTransparencyTypeUseCase } from './usecase/update-transparency-type.usecase';
+import { DeleteTransparencyTypeUseCase } from './usecase/delete-transparency-type.usecase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([TransparencyTypeEntity])],
@@ -29,7 +31,21 @@ import { FindAllTransparencyTypeUseCase } from './usecase/find-all-transparency.
         return new FindAllTransparencyTypeUseCase(transparencyTypeRepository);
       },
       inject: [PROVIDERS.TRANSPARENCY_TYPE_REPOSITORY],
-    }
+    },
+    {
+      provide: UpdateTransparencyTypeUseCase,
+      useFactory: (transparencyTypeRepository: TransparencyTypeRepository) => {
+        return new UpdateTransparencyTypeUseCase(transparencyTypeRepository);
+      },
+      inject: [PROVIDERS.TRANSPARENCY_TYPE_REPOSITORY],
+    },
+    {
+      provide: DeleteTransparencyTypeUseCase,
+      useFactory: (transparencyTypeRepository: TransparencyTypeRepository) => {
+        return new DeleteTransparencyTypeUseCase(transparencyTypeRepository);
+      },
+      inject: [PROVIDERS.TRANSPARENCY_TYPE_REPOSITORY],
+    },
   ],
   exports: [PROVIDERS.TRANSPARENCY_TYPE_REPOSITORY],
 })
