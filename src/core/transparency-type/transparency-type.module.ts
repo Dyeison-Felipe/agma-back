@@ -9,9 +9,11 @@ import { TransparencyTypeEntity } from './entities/transparency-type.entity';
 import { FindAllTransparencyTypeUseCase } from './usecase/find-all-transparency.usecase';
 import { UpdateTransparencyTypeUseCase } from './usecase/update-transparency-type.usecase';
 import { DeleteTransparencyTypeUseCase } from './usecase/delete-transparency-type.usecase';
+import { SupabaseService } from '@/shared/supabase/supabase..interface';
+import { SupabaseModule } from '@/shared/supabase/supabase.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TransparencyTypeEntity])],
+  imports: [TypeOrmModule.forFeature([TransparencyTypeEntity]), SupabaseModule],
   controllers: [TransparencyTypeController],
   providers: [
     {
@@ -41,10 +43,19 @@ import { DeleteTransparencyTypeUseCase } from './usecase/delete-transparency-typ
     },
     {
       provide: DeleteTransparencyTypeUseCase,
-      useFactory: (transparencyTypeRepository: TransparencyTypeRepository) => {
-        return new DeleteTransparencyTypeUseCase(transparencyTypeRepository);
+      useFactory: (
+        transparencyTypeRepository: TransparencyTypeRepository,
+        supabaseService: SupabaseService,
+      ) => {
+        return new DeleteTransparencyTypeUseCase(
+          transparencyTypeRepository,
+          supabaseService,
+        );
       },
-      inject: [PROVIDERS.TRANSPARENCY_TYPE_REPOSITORY],
+      inject: [
+        PROVIDERS.TRANSPARENCY_TYPE_REPOSITORY,
+        PROVIDERS.SUPABASE_SERVICE,
+      ],
     },
   ],
   exports: [PROVIDERS.TRANSPARENCY_TYPE_REPOSITORY],

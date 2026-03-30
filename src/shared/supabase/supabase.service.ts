@@ -23,7 +23,6 @@ export class SupabaseServiceImpl implements SupabaseService {
           persistSession: false,
         },
         global: {
-          // Isso garante que o fetch não tenha problemas de timeout ou DNS
           fetch: (...args) => fetch(...args),
         },
       },
@@ -32,9 +31,28 @@ export class SupabaseServiceImpl implements SupabaseService {
     this.key = envConfig.getSupabaseKey();
   }
 
-  async uploadPdf(buffer: Buffer, fileName: string, storage: SupabaseStorages): Promise<string> {
+  private normalizePath(path: string): string {
+    return path
+      .split('/') // separa pastas
+      .map((part) =>
+        part
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '') // remove acento
+          .replace(/\s+/g, '-') // espaço -> hífen
+          .toLowerCase(),
+      )
+      .join('/');
+  }
+
+  async uploadPdf(
+    buffer: Buffer,
+    fileName: string,
+    storage: string,
+  ): Promise<string> {
+    const safeStorage = this.normalizePath(storage);
+
     const { data, error } = await this.supabase.storage
-      .from(`agma/${storage}`)
+      .from(`agma/${safeStorage}`)
       .upload(fileName, buffer, {
         contentType: 'application/pdf',
       });
@@ -44,42 +62,77 @@ export class SupabaseServiceImpl implements SupabaseService {
     }
 
     const { data: publicUrl } = this.supabase.storage
-      .from(`agma/${storage}`)
+      .from(`agma/${safeStorage}`)
       .getPublicUrl(fileName);
 
     return publicUrl.publicUrl;
   }
 
   async updatePdf(
-  buffer: Buffer,
-  fileName: string,
-  storage: SupabaseStorages,
-): Promise<string> {
-  const { error } = await this.supabase.storage
-    .from(`agma/${storage}`)
-    .upload(fileName, buffer, {
-      contentType: 'application/pdf',
-      upsert: true, // sobrescreve arquivo existente
-    });
+    buffer: Buffer,
+    fileName: string,
+    storage: string,
+  ): Promise<string> {
+    const safeStorage = this.normalizePath(storage);
 
-  if (error) {
-    throw new Error(error.message);
+    const { error } = await this.supabase.storage
+      .from(`agma/${safeStorage}`)
+      .upload(fileName, buffer, {
+        contentType: 'application/pdf',
+        upsert: true,
+      });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    const { data: publicUrl } = this.supabase.storage
+      .from(`agma/${safeStorage}`)
+      .getPublicUrl(fileName);
+
+    return publicUrl.publicUrl;
   }
 
-  const { data: publicUrl } = this.supabase.storage
-    .from(`agma/${storage}`)
-    .getPublicUrl(fileName);
+  async deleteFile(fileName: string, storage: string): Promise<void> {
+    const safeStorage = this.normalizePath(storage);
 
-  return publicUrl.publicUrl;
-}
+    const { error } = await this.supabase.storage
+      .from(`agma/${safeStorage}`)
+      .remove([fileName]);
 
-  async deleteFile(fileName: string, storage: SupabaseStorages): Promise<void> {
-  const { error } = await this.supabase.storage
-    .from(`agma/${storage}`)
-    .remove([fileName]);
-
-  if (error) {
-    throw new Error(error.message);
+    if (error) {
+      throw new Error(error.message);
+    }
   }
-}
+
+  async deleteFolder(storage: string): Promise<void> {
+    const safeStorage = this.normalizePath(storage);
+
+    // 1. listar arquivos dentro da "pasta"
+    const { data: files, error: listError } = await this.supabase.storage
+      .from('agma') // bucket
+      .list(safeStorage, { // folder
+        limit: 1000,
+      });
+
+    if (listError) {
+      throw new Error(listError.message);
+    }
+
+    if (!files || files.length === 0) {
+      return;
+    }
+
+    // 2. montar caminho completo dos arquivos
+    const filePaths = files.map((file) => `${safeStorage}/${file.name}`);
+
+    // 3. deletar
+    const { error: deleteError } = await this.supabase.storage
+      .from('agma') // bucket
+      .remove(filePaths); // folder
+
+    if (deleteError) {
+      throw new Error(deleteError.message);
+    }
+  }
 }

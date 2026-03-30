@@ -13,10 +13,20 @@ export class TransparencyPortalServiceImpl implements TransparencyPortalReposito
     private readonly transparencyRepository: Repository<TransparencyPortalEntity>,
   ) {}
 
-  async softDeleteByTypeId(typeId: string): Promise<void> {
-    await this.transparencyRepository.softDelete({
-      transparencyType: { id: typeId },
+  async findAllByType(
+    typeId: string,
+  ): Promise<TransparencyPortalEntity[] | null> {
+    const transparencyPortal = await this.transparencyRepository.find({
+      where: { transparencyType: { id: typeId } },
     });
+
+    if (!transparencyPortal) return null;
+
+    return transparencyPortal;
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.transparencyRepository.softDelete(id);
   }
 
   async create(

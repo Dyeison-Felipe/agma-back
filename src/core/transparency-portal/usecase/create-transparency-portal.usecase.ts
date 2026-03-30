@@ -39,7 +39,7 @@ export class CreateTransparencyPortalUseCase implements UseCase<Input, Output> {
     const filepath = await this.supabaseService.uploadPdf(
       input.fileBuffer.buffer,
       fileName,
-      SupabaseStorages.TRANSPARENCY_PORTAL
+      transparencyType.name,
     );
 
     if (!filepath) {
