@@ -4,6 +4,7 @@ import { Inject } from '@nestjs/common';
 import type { TransparencyTypeRepository } from '../transparency-type.interface';
 import { NotFoundError } from '@/shared/errors/not-found-error';
 import type { SupabaseService } from '@/shared/supabase/supabase..interface';
+import { BadRequestError } from '@/shared/errors/bad-request-error';
 
 type Input = {
   id: string;
@@ -20,15 +21,24 @@ export class DeleteTransparencyTypeUseCase implements UseCase<Input, Output> {
   ) {}
 
   async execute({ id }: Input): Promise<void> {
-    const existTransparencyType =
-      await this.transparencyTypeRepository.findById(id);
+    const transparencyType =
+      await this.transparencyTypeRepository.findTransparenciesByType(id);
 
-    if (!existTransparencyType) {
+    if (!transparencyType) {
       throw new NotFoundError(`Nenhum tipo de trasparência foi encontrado`);
     }
 
-    await this.transparencyTypeRepository.delete(existTransparencyType);
+    if (
+      transparencyType.transparencyPortal &&
+      transparencyType.transparencyPortal?.length > 1
+    ) {
+      throw new BadRequestError(
+        `Não é possivel remover um tipo de transparência que possui documentos vinculados `,
+      );
+    }
 
-    await this.supabaseSerice.deleteFolder(existTransparencyType.name);
+    await this.transparencyTypeRepository.delete(transparencyType);
+
+    await this.supabaseSerice.deleteFolder(transparencyType.name);
   }
 }

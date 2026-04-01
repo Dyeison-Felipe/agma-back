@@ -93,12 +93,20 @@ export class SupabaseServiceImpl implements SupabaseService {
     return publicUrl.publicUrl;
   }
 
-  async deleteFile(fileName: string, storage: string): Promise<void> {
-    const safeStorage = this.normalizePath(storage);
+  async deleteFileByUrl(url: string): Promise<void> {
+    const marker = '/object/public/agma/';
+    const idx = url.indexOf(marker);
+
+    if (idx === -1) {
+      throw new Error('URL inválida');
+    }
+
+    const fullPath = url.slice(idx + marker.length);
+    // fullPath = "transparency-portal/9f3286ca-dc71-42cb-b386-11dc818b1ffb.png"
 
     const { error } = await this.supabase.storage
-      .from(`agma/${safeStorage}`)
-      .remove([fileName]);
+      .from('agma')
+      .remove([fullPath]); // o remove aceita o path completo dentro do bucket
 
     if (error) {
       throw new Error(error.message);
@@ -111,7 +119,8 @@ export class SupabaseServiceImpl implements SupabaseService {
     // 1. listar arquivos dentro da "pasta"
     const { data: files, error: listError } = await this.supabase.storage
       .from('agma') // bucket
-      .list(safeStorage, { // folder
+      .list(safeStorage, {
+        // folder
         limit: 1000,
       });
 

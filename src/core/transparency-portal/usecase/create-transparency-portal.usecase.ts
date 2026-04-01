@@ -4,7 +4,7 @@ import { Inject } from '@nestjs/common';
 import { PROVIDERS } from '@/shared/constants/providers';
 import type { SupabaseService } from '@/shared/supabase/supabase..interface';
 import type { TransparencyTypeRepository } from '@/core/transparency-type/transparency-type.interface';
-import { TransparencyPortalOutput } from '@/shared/output/transparency-portal.output';
+import { TransparencyPortalOutput } from '@/shared/output/trasnparency-portal/transparency-portal.output';
 import { FileDto } from '@/shared/dto/file.dto';
 import { SupabaseStorages } from '@/shared/enums/supabase-storages.enum';
 
@@ -46,7 +46,7 @@ export class CreateTransparencyPortalUseCase implements UseCase<Input, Output> {
       throw new Error(`Erro ao salvar o pdf`);
     }
 
-    const savedTransparency = await this.transparencyRepository.create({
+    const savedDocument = await this.transparencyRepository.create({
       id: crypto.randomUUID(),
       name: input.fileBuffer.filename,
       path: filepath,
@@ -56,10 +56,10 @@ export class CreateTransparencyPortalUseCase implements UseCase<Input, Output> {
     });
 
     const output: Output = {
-      id: savedTransparency.id,
-      filename: savedTransparency.name,
-      path: savedTransparency.path,
-      transparencyType: savedTransparency.transparencyType,
+      id: savedDocument.id,
+      filename: savedDocument.name,
+      path: savedDocument.path,
+      transparencyType: savedDocument.transparencyType,
     }
 
     return output;

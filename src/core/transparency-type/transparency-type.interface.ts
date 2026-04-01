@@ -7,4 +7,5 @@ export interface TransparencyTypeRepository {
   findById(id: string): Promise<TransparencyTypeEntity | null>;
   findAll(): Promise<TransparencyTypeEntity[] | null>;
   update(entity: TransparencyTypeEntity): Promise<TransparencyTypeEntity>;
+  findTransparenciesByType(id: string): Promise<TransparencyTypeEntity | null>
 }

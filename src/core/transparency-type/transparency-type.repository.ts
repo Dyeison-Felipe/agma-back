@@ -11,6 +11,17 @@ export class TransparencyTypeRepositoryImpl implements TransparencyTypeRepositor
     private readonly transparencyTypeRepository: Repository<TransparencyTypeEntity>,
   ) {}
 
+  async findTransparenciesByType(id: string): Promise<TransparencyTypeEntity | null> {
+    const transparencyType = await this.transparencyTypeRepository.findOne({
+      where: { id },
+      relations: ['transparencyPortal']
+    });
+
+    if (!transparencyType) return null;
+
+    return transparencyType;
+  }
+
   async delete(entity: TransparencyTypeEntity): Promise<void> {
 
     await this.transparencyTypeRepository.softRemove(entity);
@@ -45,13 +56,14 @@ export class TransparencyTypeRepositoryImpl implements TransparencyTypeRepositor
   async findById(id: string): Promise<TransparencyTypeEntity | null> {
     const transparencyType = await this.transparencyTypeRepository.findOne({
       where: { id },
-      relations: ['transparencyPortal']
     });
 
     if (!transparencyType) return null;
 
     return transparencyType;
   }
+
+  
 
   async create(
     entity: TransparencyTypeEntity,
