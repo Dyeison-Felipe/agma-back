@@ -17,6 +17,7 @@ import {
   ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiExtraModels,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -27,7 +28,11 @@ import {
 import { Multipart } from '@/shared/decorators/multipart.decorator';
 import { CreateTransparencyPortalPresenter } from '@/shared/presenters/transparency-portal/create-transparency-portal.presenter';
 import { FindAllPaginatedTransparencyByTypeUseCase } from './usecase/find-all-paginated-transparency-by-type.usecase';
-import { PaginationPresenter } from '@/shared/presenters/pagination/pagination.presenter';
+import {
+  MetaPresenter,
+  PaginatedResponse,
+  PaginationPresenter,
+} from '@/shared/presenters/pagination/pagination.presenter';
 import { FindAllTransparencyPortalPaginatedPresenter } from '@/shared/presenters/transparency-portal/find-all-transparency-portal-paginated.presenter';
 import { DeleteDocumentTransparencyPortalUseCase } from './usecase/delete-transparency-portal.usecase';
 
@@ -86,9 +91,10 @@ export class TransparencyPortalController {
     example: 10,
     description: 'Quantidade de itens por página',
   })
+  @ApiExtraModels(FindAllTransparencyPortalPaginatedPresenter, MetaPresenter)
   @ApiOkResponse({
     description: 'Documentos encontrados',
-    type: CreateTransparencyPortalPresenter,
+    schema: PaginatedResponse(FindAllTransparencyPortalPaginatedPresenter),
   })
   @ApiInternalServerErrorResponse({
     description: 'Erro interno no servidor',
@@ -111,7 +117,6 @@ export class TransparencyPortalController {
   @ApiOperation({ summary: 'Deletar um documento' })
   @ApiOkResponse({
     description: 'Documento removido com sucesso',
-    type: CreateTransparencyPortalPresenter,
   })
   @ApiNotFoundResponse({
     description: 'Documento ou tipo de transparência não encontrados',
