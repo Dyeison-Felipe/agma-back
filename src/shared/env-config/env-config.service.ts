@@ -46,4 +46,14 @@ export class EnvConfigServiceImpl implements EnvConfigService {
   getSupabaseUrl(): string {
     return this.configService.get<string>('SUPABASE_URL') as string;
   }
+
+  getAllowedOrigins(): string[] {
+    return (this.configService.get<string>('ALLOWED_ORIGINS') as string)?.split(
+      ',',
+    );
+  }
+
+  getApiUrl(): string {
+    return this.configService.get<string>('API_URL') as string;
+  }
 }

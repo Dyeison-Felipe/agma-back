@@ -14,7 +14,6 @@ type Output = TransparencyTypeOutput;
 
 export class UpdateTransparencyTypeUseCase implements UseCase<Input, Output> {
   constructor(
-    @Inject(PROVIDERS.TRANSPARENCY_TYPE_REPOSITORY)
     private readonly transparencyTypeRepository: TransparencyTypeRepository,
   ) {}
   async execute(input: Input): Promise<Output> {
@@ -27,16 +26,17 @@ export class UpdateTransparencyTypeUseCase implements UseCase<Input, Output> {
       );
     }
 
-    existTransparencyType.name = input.name
+    existTransparencyType.name = input.name;
 
-    const updatedTransparencyType = await this.transparencyTypeRepository.update(existTransparencyType);
+    const updatedTransparencyType =
+      await this.transparencyTypeRepository.update(existTransparencyType);
 
     const output: Output = {
       id: updatedTransparencyType.id,
       name: updatedTransparencyType.name,
       createdAt: updatedTransparencyType.createdAt,
       updatedAt: updatedTransparencyType.updatedAt,
-    }
+    };
 
     return output;
   }

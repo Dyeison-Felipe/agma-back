@@ -12,7 +12,6 @@ import {
   CreateTransparencyPortalMultipartDto,
 } from './dto/create-transparency-portal.dto';
 import { CreateTransparencyPortalUseCase } from './usecase/create-transparency-portal.usecase';
-import { UploadedFileBuffer } from '@/shared/decorators/uploaded-file-buffer.decorator';
 import {
   ApiBody,
   ApiConflictResponse,
@@ -59,10 +58,10 @@ export class TransparencyPortalController {
   @ApiConflictResponse({
     description: 'Documento já existe',
   })
-  create(
+  async create(
     @Body() dto: CreateTransparencyPortalMultipartDto,
   ): Promise<CreateTransparencyPortalPresenter> {
-    return this.createTransparencyPortalUseCase.execute({
+    return await this.createTransparencyPortalUseCase.execute({
       transparencyType: dto.transparencyType,
       fileBuffer: dto.pdf,
     });

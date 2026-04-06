@@ -14,17 +14,19 @@ type Output = TransparencyTypeOutput;
 
 export class CreateTransparencyTypeUseCase implements UseCase<Input, Output> {
   constructor(
-    @Inject(PROVIDERS.TRANSPARENCY_TYPE_REPOSITORY)
     private readonly transparencyTypeRepository: TransparencyTypeRepository,
   ) {}
   async execute(input: Input): Promise<Output> {
+    const transparencyType = await this.transparencyTypeRepository.findByName(
+      input.name,
+    );
 
-    const transparencyType = await this.transparencyTypeRepository.findByName(input.name);
-
-    if(transparencyType) {
-      throw new ConflictError(`Já existe um tipo de transparência com o nome ${input.name}`)
+    if (transparencyType) {
+      throw new ConflictError(
+        `Já existe um tipo de transparência com o nome ${input.name}`,
+      );
     }
-    
+
     const saveTransparencyType = await this.transparencyTypeRepository.create({
       id: crypto.randomUUID(),
       name: input.name,
@@ -33,7 +35,9 @@ export class CreateTransparencyTypeUseCase implements UseCase<Input, Output> {
     });
 
     if (!saveTransparencyType) {
-      throw new BadRequestError(`Ocorreu um erro ao salvar o tipo de transparência`);
+      throw new BadRequestError(
+        `Ocorreu um erro ao salvar o tipo de transparência`,
+      );
     }
 
     const output: Output = {

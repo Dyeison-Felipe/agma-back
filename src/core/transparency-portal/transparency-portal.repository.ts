@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTransparencyPortalDto } from './dto/create-transparency-portal.dto';
 import { UpdateTransparencyPortalDto } from './dto/update-transparency-portal.dto';
-import { TransparencyPortalRepository } from './transparency-portal.interface';
+import {
+  FindAllFilters,
+  TransparencyPortalRepository,
+} from './transparency-portal.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TransparencyPortalEntity } from './entities/transparency-portal.entity';
@@ -42,6 +45,26 @@ export class TransparencyPortalServiceImpl implements TransparencyPortalReposito
       .where('type.id = :typeId', { typeId })
       .orderBy('tp.createdAt', pagination.direction || 'ASC');
 
+    const result = await paginateQuery(queryBuilder, pagination);
+
+    return {
+      items: result.items,
+      meta: result.meta,
+    };
+  }
+
+  async findAll(
+    pagination: PaginationDto,
+    filters: FindAllFilters,
+  ): Promise<Pagination<TransparencyPortalEntity>> {
+    const queryBuilder = this.transparencyRepository
+      .createQueryBuilder('tp')
+      .leftJoinAndSelect('tp.transparencyType', 'type')
+      .orderBy('tp.createdAt', pagination.direction || 'ASC');
+
+    if (filters.typeId) {
+      queryBuilder.where('type.id = :typeId', { typeId: filters.typeId });
+    }
     const result = await paginateQuery(queryBuilder, pagination);
 
     return {

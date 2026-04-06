@@ -9,7 +9,7 @@ import { TransparencyTypeEntity } from './entities/transparency-type.entity';
 import { FindAllTransparencyTypeUseCase } from './usecase/find-all-transparency.usecase';
 import { UpdateTransparencyTypeUseCase } from './usecase/update-transparency-type.usecase';
 import { DeleteTransparencyTypeUseCase } from './usecase/delete-transparency-type.usecase';
-import { SupabaseService } from '@/shared/supabase/supabase..interface';
+import { SupabaseService } from '@/shared/supabase/supabase.interface';
 import { SupabaseModule } from '@/shared/supabase/supabase.module';
 
 @Module({

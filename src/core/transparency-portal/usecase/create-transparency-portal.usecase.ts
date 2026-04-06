@@ -1,12 +1,9 @@
 import { UseCase } from '@/shared/usecase/usecase';
 import type { TransparencyPortalRepository } from '../transparency-portal.interface';
-import { Inject } from '@nestjs/common';
-import { PROVIDERS } from '@/shared/constants/providers';
-import type { SupabaseService } from '@/shared/supabase/supabase..interface';
+import type { SupabaseService } from '@/shared/supabase/supabase.interface';
 import type { TransparencyTypeRepository } from '@/core/transparency-type/transparency-type.interface';
 import { TransparencyPortalOutput } from '@/shared/output/trasnparency-portal/transparency-portal.output';
 import { FileDto } from '@/shared/dto/file.dto';
-import { SupabaseStorages } from '@/shared/enums/supabase-storages.enum';
 
 type Input = {
   transparencyType: {
@@ -15,26 +12,25 @@ type Input = {
   fileBuffer: FileDto;
 };
 
-type Output = TransparencyPortalOutput
+type Output = TransparencyPortalOutput;
 
 export class CreateTransparencyPortalUseCase implements UseCase<Input, Output> {
   constructor(
-    @Inject(PROVIDERS.TRANSPARENCY_PORTAL_REPOSITORY)
     private readonly transparencyRepository: TransparencyPortalRepository,
-    @Inject(PROVIDERS.SUPABASE_SERVICE)
     private readonly supabaseService: SupabaseService,
-    @Inject(PROVIDERS.TRANSPARENCY_TYPE_REPOSITORY) private readonly transparencyTypeRepository: TransparencyTypeRepository,
+    private readonly transparencyTypeRepository: TransparencyTypeRepository,
   ) {}
 
   async execute(input: Input): Promise<Output> {
+    const transparencyType = await this.transparencyTypeRepository.findById(
+      input.transparencyType.id,
+    );
 
-    const transparencyType = await this.transparencyTypeRepository.findById(input.transparencyType.id);
-
-    if(!transparencyType) {
+    if (!transparencyType) {
       throw new Error(`Tipo não encontrado`);
     }
 
-    const fileName = `${crypto.randomUUID()}${input.fileBuffer.extension}`
+    const fileName = `${crypto.randomUUID()}${input.fileBuffer.extension}`;
 
     const filepath = await this.supabaseService.uploadPdf(
       input.fileBuffer.buffer,
@@ -52,7 +48,7 @@ export class CreateTransparencyPortalUseCase implements UseCase<Input, Output> {
       path: filepath,
       transparencyType: transparencyType,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
 
     const output: Output = {
@@ -60,7 +56,7 @@ export class CreateTransparencyPortalUseCase implements UseCase<Input, Output> {
       filename: savedDocument.name,
       path: savedDocument.path,
       transparencyType: savedDocument.transparencyType,
-    }
+    };
 
     return output;
   }
