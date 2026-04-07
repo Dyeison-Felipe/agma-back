@@ -4,7 +4,7 @@ import { PROVIDERS } from '@/shared/constants/providers';
 import { TransparencyPortalServiceImpl } from './transparency-portal.repository';
 import { CreateTransparencyPortalUseCase } from './usecase/create-transparency-portal.usecase';
 import { TransparencyPortalRepository } from './transparency-portal.interface';
-import { SupabaseService } from '@/shared/supabase/supabase..interface';
+import { SupabaseService } from '@/shared/supabase/supabase.interface';
 import { TransparencyTypeRepository } from '../transparency-type/transparency-type.interface';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TransparencyPortalEntity } from './entities/transparency-portal.entity';
@@ -12,6 +12,7 @@ import { TransparencyTypeModule } from '../transparency-type/transparency-type.m
 import { SupabaseModule } from '@/shared/supabase/supabase.module';
 import { FindAllPaginatedTransparencyByTypeUseCase } from './usecase/find-all-paginated-transparency-by-type.usecase';
 import { DeleteDocumentTransparencyPortalUseCase } from './usecase/delete-transparency-portal.usecase';
+import { EnvConfigService } from '@/shared/env-config/env-config.interface';
 
 @Module({
   imports: [
@@ -49,15 +50,21 @@ import { DeleteDocumentTransparencyPortalUseCase } from './usecase/delete-transp
       useFactory: (
         transparencyPortalRepository: TransparencyPortalRepository,
         transparencyTypeRepository: TransparencyTypeRepository,
+        supabaseService: SupabaseService,
+        envConfigService: EnvConfigService,
       ) => {
         return new FindAllPaginatedTransparencyByTypeUseCase(
           transparencyPortalRepository,
           transparencyTypeRepository,
+          supabaseService,
+          envConfigService,
         );
       },
       inject: [
         PROVIDERS.TRANSPARENCY_PORTAL_REPOSITORY,
         PROVIDERS.TRANSPARENCY_TYPE_REPOSITORY,
+        PROVIDERS.SUPABASE_SERVICE,
+        PROVIDERS.ENV_CONFIG_SERVICE,
       ],
     },
     {

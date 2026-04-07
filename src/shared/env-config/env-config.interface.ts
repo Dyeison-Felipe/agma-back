@@ -2,7 +2,7 @@ export interface EnvConfigService {
   // getAllowedOrigins(): string[]
   getPort(): number;
   getSupabaseKey(): string;
-  getSupabaseUrl(): string
+  getSupabaseUrl(): string;
   getDbHost(): string;
   getDbPort(): number;
   getDbUsername(): string;
@@ -10,4 +10,6 @@ export interface EnvConfigService {
   getDbPassword(): string;
   getMigrationRun(): boolean;
   getDbLogs(): boolean;
+  getAllowedOrigins(): string[];
+  getApiUrl(): string;
 }

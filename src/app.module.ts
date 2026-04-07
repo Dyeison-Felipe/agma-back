@@ -1,3 +1,4 @@
+import { StorageModule } from './core/storage/storage.module';
 import { Module } from '@nestjs/common';
 import { EnvConfigModule } from './shared/env-config/env-config.module';
 import { DatabaseModule } from './shared/database/database.module';
@@ -7,7 +8,13 @@ import { RoleModule } from './core/role/role.module';
 import { UserModule } from './core/user/user.module';
 
 @Module({
-  imports: [EnvConfigModule, DatabaseModule, TransparencyPortalModule, TransparencyTypeModule, RoleModule, UserModule],
+  imports: [
+    StorageModule,
+    EnvConfigModule,
+    DatabaseModule,
+    TransparencyPortalModule,
+    TransparencyTypeModule,
+   RoleModule, UserModule],
   controllers: [],
   providers: [],
 })

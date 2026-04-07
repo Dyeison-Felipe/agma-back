@@ -3,7 +3,7 @@ import { UseCase } from '@/shared/usecase/usecase';
 import { Inject } from '@nestjs/common';
 import type { TransparencyTypeRepository } from '../transparency-type.interface';
 import { NotFoundError } from '@/shared/errors/not-found-error';
-import type { SupabaseService } from '@/shared/supabase/supabase..interface';
+import type { SupabaseService } from '@/shared/supabase/supabase.interface';
 import { BadRequestError } from '@/shared/errors/bad-request-error';
 
 type Input = {
@@ -14,9 +14,7 @@ type Output = void;
 
 export class DeleteTransparencyTypeUseCase implements UseCase<Input, Output> {
   constructor(
-    @Inject(PROVIDERS.TRANSPARENCY_TYPE_REPOSITORY)
     private readonly transparencyTypeRepository: TransparencyTypeRepository,
-    @Inject(PROVIDERS.SUPABASE_SERVICE)
     private readonly supabaseSerice: SupabaseService,
   ) {}
 

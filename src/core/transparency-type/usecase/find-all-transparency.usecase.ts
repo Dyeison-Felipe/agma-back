@@ -17,16 +17,17 @@ export class FindAllTransparencyTypeUseCase implements UseCase<Input, Output> {
   async execute(input: Input): Promise<Output> {
     const transparency = await this.transparencyTypeRepository.findAll();
 
-    if (!transparency || transparency.length === 0) {
-      throw new NotFoundError(`Nenhum tipo de transparencia encontrado`);
-    }
+    // if (!transparency || transparency.length === 0) {
+    //   throw new NotFoundError(`Nenhum tipo de transparencia encontrado`);
+    // }
 
-    const output: Output = transparency.map((item) => ({
-      id: item.id,
-      name: item.name,
-      createdAt: item.createdAt,
-      updatedAt: item.updatedAt,
-    }));
+    const output: Output =
+      transparency?.map((item) => ({
+        id: item.id,
+        name: item.name,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
+      })) ?? [];
 
     return output;
   }

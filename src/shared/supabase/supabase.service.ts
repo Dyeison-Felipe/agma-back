@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { createClient } from '@supabase/supabase-js';
 import { PROVIDERS } from '../constants/providers';
 import type { EnvConfigService } from '../env-config/env-config.interface';
-import { SupabaseService } from './supabase..interface';
+import { SupabaseService } from './supabase.interface';
 import { SupabaseStorages } from '../enums/supabase-storages.enum';
 
 @Injectable()
@@ -51,7 +51,7 @@ export class SupabaseServiceImpl implements SupabaseService {
   ): Promise<string> {
     const safeStorage = this.normalizePath(storage);
 
-    const { data, error } = await this.supabase.storage
+    const { error } = await this.supabase.storage
       .from(`agma/${safeStorage}`)
       .upload(fileName, buffer, {
         contentType: 'application/pdf',
@@ -61,11 +61,7 @@ export class SupabaseServiceImpl implements SupabaseService {
       throw new Error(error.message);
     }
 
-    const { data: publicUrl } = this.supabase.storage
-      .from(`agma/${safeStorage}`)
-      .getPublicUrl(fileName);
-
-    return publicUrl.publicUrl;
+    return `agma/${safeStorage}/${fileName}`;
   }
 
   async updatePdf(
@@ -143,5 +139,23 @@ export class SupabaseServiceImpl implements SupabaseService {
     if (deleteError) {
       throw new Error(deleteError.message);
     }
+  }
+
+  getUrl(path: string): string {
+    return `${this.envConfig.getSupabaseUrl()}/storage/v1/object/public/${path}`;
+  }
+
+  async download(path: string): Promise<Blob> {
+    const [bucket, ...pathParts] = path.split('/');
+
+    const { data, error } = await this.supabase.storage
+      .from(bucket)
+      .download(pathParts.join('/'));
+
+    if (!data || error) {
+      throw new Error(JSON.stringify(error));
+    }
+
+    return data;
   }
 }

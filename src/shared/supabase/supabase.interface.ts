@@ -3,4 +3,6 @@ export interface SupabaseService {
   deleteFileByUrl(url: string): Promise<void>;
   updatePdf(buffer: Buffer, fileName: string, storage: string): Promise<string>;
   deleteFolder(storage: string): Promise<void>;
+  getUrl(path: string): string;
+  download(path: string): Promise<Blob>;
 }
