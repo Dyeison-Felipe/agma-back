@@ -1,4 +1,4 @@
-import { TransparencyTypeOutput } from '../transparency-type.output';
+import { TransparencyTypeOutput } from '../transparency-type/transparency-type.output';
 
 export type TransparencyPortalOutput = {
   id: string;

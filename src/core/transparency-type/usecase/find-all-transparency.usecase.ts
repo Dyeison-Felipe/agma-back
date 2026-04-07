@@ -2,7 +2,7 @@ import { PROVIDERS } from '@/shared/constants/providers';
 import { UseCase } from '@/shared/usecase/usecase';
 import { Inject } from '@nestjs/common';
 import type { TransparencyTypeRepository } from '../transparency-type.interface';
-import { TransparencyTypeOutput } from '@/shared/output/transparency-type.output';
+import { TransparencyTypeOutput } from '@/shared/output/transparency-type/transparency-type.output';
 import { NotFoundError } from '@/shared/errors/not-found-error';
 
 type Input = void;
