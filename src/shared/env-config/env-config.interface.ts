@@ -1,4 +1,5 @@
 export interface EnvConfigService {
+  getSalts(): number;
   // getAllowedOrigins(): string[]
   getPort(): number;
   getSupabaseKey(): string;

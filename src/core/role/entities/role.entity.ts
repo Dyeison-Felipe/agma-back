@@ -1,5 +1,13 @@
 import { UserEntity } from '@/core/user/entities/user.entity';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('role')
 export class RoleEntity {
@@ -29,5 +37,5 @@ export class RoleEntity {
   deletedAt?: Date | null;
 
   @OneToMany(() => UserEntity, (user) => user.role)
-users: UserEntity[];
+  users?: UserEntity[];
 }

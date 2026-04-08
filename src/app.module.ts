@@ -6,6 +6,7 @@ import { TransparencyPortalModule } from './core/transparency-portal/transparenc
 import { TransparencyTypeModule } from './core/transparency-type/transparency-type.module';
 import { RoleModule } from './core/role/role.module';
 import { UserModule } from './core/user/user.module';
+import { HashModule } from './shared/hash/hash.module';
 
 @Module({
   imports: [
@@ -14,7 +15,10 @@ import { UserModule } from './core/user/user.module';
     DatabaseModule,
     TransparencyPortalModule,
     TransparencyTypeModule,
-   RoleModule, UserModule],
+    RoleModule,
+    UserModule,
+    HashModule,
+  ],
   controllers: [],
   providers: [],
 })

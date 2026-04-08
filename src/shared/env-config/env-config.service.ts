@@ -3,6 +3,10 @@ import { ConfigService } from '@nestjs/config';
 
 export class EnvConfigServiceImpl implements EnvConfigService {
   constructor(private readonly configService: ConfigService) {}
+  getSalts(): number {
+    return +(this.configService.get<string>('SALTS') as string);
+  }
+
   // getAllowedOrigins(): string[] {
   //   return (this.configService.get<string>('ALLOWED_ORIGIN')as string).split(',');
   // }

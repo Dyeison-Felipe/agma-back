@@ -50,20 +50,17 @@ import { EnvConfigService } from '@/shared/env-config/env-config.interface';
       useFactory: (
         transparencyPortalRepository: TransparencyPortalRepository,
         transparencyTypeRepository: TransparencyTypeRepository,
-        supabaseService: SupabaseService,
         envConfigService: EnvConfigService,
       ) => {
         return new FindAllPaginatedTransparencyByTypeUseCase(
           transparencyPortalRepository,
           transparencyTypeRepository,
-          supabaseService,
           envConfigService,
         );
       },
       inject: [
         PROVIDERS.TRANSPARENCY_PORTAL_REPOSITORY,
         PROVIDERS.TRANSPARENCY_TYPE_REPOSITORY,
-        PROVIDERS.SUPABASE_SERVICE,
         PROVIDERS.ENV_CONFIG_SERVICE,
       ],
     },

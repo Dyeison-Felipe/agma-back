@@ -18,13 +18,18 @@ export class UserEntity {
   @Column({ name: 'name', length: 255, type: 'varchar' })
   name: string;
 
+  @Column({ name: 'email', length: 255, type: 'varchar' })
+  email: string;
+
+  @Column({name: 'active', type: 'boolean', default: true})
+  active: boolean
+
   @Column({ name: 'password', length: 255, type: 'varchar' })
   password: string;
 
   @Column({
     name: 'recover_password',
-    length: 255,
-    type: 'varchar',
+    type: 'text',
     nullable: true,
   })
   recover_password?: string;
