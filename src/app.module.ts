@@ -10,6 +10,13 @@ import { HashModule } from './shared/hash/hash.module';
 import { JwtConfigModule } from './shared/jwt/jwt.module';
 import { LoggedUserModule } from './shared/logged-user/logged-user.module';
 import { AuthModule } from './core/auth/auth.module';
+import { APP_GUARD, Reflector } from '@nestjs/core';
+import { AuthGuard } from './core/auth/guard/auth.guard';
+import { RolesGuard } from './core/auth/guard/role.guard';
+import { JwtService } from './shared/jwt/jwt.interface';
+import { UserRepository } from './core/user/user.interface';
+import { LoggedUserService } from './shared/logged-user/logged-user.interface';
+import { PROVIDERS } from './shared/constants/providers';
 
 @Module({
   imports: [
@@ -26,6 +33,15 @@ import { AuthModule } from './core/auth/auth.module';
     AuthModule
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    }
+  ],
 })
 export class AppModule {}

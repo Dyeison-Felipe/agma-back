@@ -1,5 +1,5 @@
 // user.controller.ts
-import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { CreateUserUseCase } from './usecase/create.usecase';
 import { UpdateUserUseCase } from './usecase/update.usercase';
@@ -11,10 +11,13 @@ import { CreateUserPresenter } from '@/shared/presenters/user/create-user.presen
 import { UserPresenter } from '@/shared/presenters/user/user.presenter';
 import { UpdateUserPresenter } from '@/shared/presenters/user/update-user.presenter';
 import { AuthGuard } from '../auth/guard/auth.guard';
+import { Roles } from '@/shared/decorators/role.decorator';
+import { RolesGuard } from '../auth/guard/role.guard';
+import { ROLE } from '@/shared/constants/roles';
 
 @ApiTags('User')
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
+@Roles(ROLE.ADMIN)
 @Controller('v1/user')
 export class UserController {
   constructor(

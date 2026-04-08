@@ -26,8 +26,13 @@ import { UpdateTransparencyTypeUseCase } from './usecase/update-transparency-typ
 import { UpdateTransparencyTypeDto } from './dto/update-transparency-type.dto';
 import { UpdateTransparencyTypePresenter } from '@/shared/presenters/transparency-type/update-transparency-type.presenter';
 import { DeleteTransparencyTypeUseCase } from './usecase/delete-transparency-type.usecase';
+import { AuthGuard } from '../auth/guard/auth.guard';
+import { RolesGuard } from '../auth/guard/role.guard';
+import { Roles } from '@/shared/decorators/role.decorator';
+import { ROLE } from '@/shared/constants/roles';
 
 @ApiTags('TransparencyType')
+@Roles(ROLE.ADMIN)
 @Controller('v1/transparency-type')
 export class TransparencyTypeController {
   constructor(

@@ -10,14 +10,16 @@ import { UserRepository } from '../user/user.interface';
 import { HashService } from '@/shared/hash/hash.interface';
 import { EnvConfigService } from '@/shared/env-config/env-config.interface';
 import { PROVIDERS } from '@/shared/constants/providers';
+import { Reflector } from '@nestjs/core';
 import { AuthGuard } from './guard/auth.guard';
+import { RolesGuard } from './guard/role.guard';
 
 @Global()
 @Module({
   imports: [UserModule, HashModule, JwtConfigModule, EnvConfigModule],
   controllers: [AuthController],
   providers: [
-    AuthGuard,
+    Reflector,
     {
       provide: LoginUseCase,
       useFactory: (
@@ -41,6 +43,6 @@ import { AuthGuard } from './guard/auth.guard';
       ],
     },
   ],
-  exports: [AuthGuard]
+  exports: [Reflector ]
 })
 export class AuthModule {}

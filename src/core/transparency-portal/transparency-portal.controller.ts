@@ -34,6 +34,9 @@ import {
 } from '@/shared/presenters/pagination/pagination.presenter';
 import { FindAllTransparencyPortalPaginatedPresenter } from '@/shared/presenters/transparency-portal/find-all-transparency-portal-paginated.presenter';
 import { DeleteDocumentTransparencyPortalUseCase } from './usecase/delete-transparency-portal.usecase';
+import { Public } from '@/shared/decorators/public.decorator';
+import { Roles } from '@/shared/decorators/role.decorator';
+import { ROLE } from '@/shared/constants/roles';
 
 @ApiTags('TransparencyPortal')
 @Controller('v1/transparency-portal')
@@ -58,6 +61,7 @@ export class TransparencyPortalController {
   @ApiConflictResponse({
     description: 'Documento já existe',
   })
+  @Roles(ROLE.ADMIN)
   async create(
     @Body() dto: CreateTransparencyPortalMultipartDto,
   ): Promise<CreateTransparencyPortalPresenter> {
@@ -98,6 +102,7 @@ export class TransparencyPortalController {
   @ApiInternalServerErrorResponse({
     description: 'Erro interno no servidor',
   })
+  @Public()
   @Get()
   async findAllPaginated(
     @Query('transparencyType') transparencyType: string,
@@ -123,6 +128,7 @@ export class TransparencyPortalController {
   @ApiInternalServerErrorResponse({
     description: 'Erro interno no servidor',
   })
+  @Roles(ROLE.ADMIN)
   @Delete('type/:typeId/document/:documentId')
   async deleteDocument(
     @Param('typeId') typeId: string,

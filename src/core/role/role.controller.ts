@@ -23,9 +23,12 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import { CreateRolePresenter } from '@/shared/presenters/role/create-role.presenter';
 import { UpdateRolePresenter } from '@/shared/presenters/role/update-role.presenter';
 import { FindAllRolePresenter } from '@/shared/presenters/role/find-all-roles.presenter';
+import { Roles } from '@/shared/decorators/role.decorator';
+import { ROLE } from '@/shared/constants/roles';
 
 @ApiTags('Role')
 @ApiBearerAuth()
+@Roles(ROLE.ADMIN)
 @Controller('/v1/role')
 export class RoleController {
   constructor(
