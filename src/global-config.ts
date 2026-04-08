@@ -8,6 +8,7 @@ import { ConflictErrorFilter } from './shared/exeption-filters/conflict-error.fi
 import { ForbiddenErrorFilter } from './shared/exeption-filters/forbidden-error.filter';
 import { NotFoundErrorFilter } from './shared/exeption-filters/not-found-error.filter';
 import { UnauthorizedErrorFilter } from './shared/exeption-filters/unauthorized-error.filter';
+import fastifyCookie from '@fastify/cookie';
 
 export async function globalConfig(
   app: NestFastifyApplication,
@@ -31,6 +32,7 @@ export async function globalConfig(
   app.enableCors({
     origin: origins,
     methods: 'GET,PUT,POST,DELETE',
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   });
 
@@ -57,4 +59,9 @@ export async function globalConfig(
     new NotFoundErrorFilter(),
     new UnauthorizedErrorFilter(),
   );
+
+  // Cookies
+  await app.register(fastifyCookie, {
+    secret: envConfig.getCookieSecret(),
+  });
 }

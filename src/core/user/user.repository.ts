@@ -16,6 +16,7 @@ export class UserRepositoryImpl implements UserRepository {
   async findByEmail(email: string): Promise<UserEntity | null> {
     const user = await this.userRepository.findOne({
       where: { email },
+      relations: ['role']
     });
 
     if (!user) return null;
@@ -40,6 +41,7 @@ export class UserRepositoryImpl implements UserRepository {
       where: {
         id,
       },
+      relations: ['role']
     });
 
     if (!user) return null;

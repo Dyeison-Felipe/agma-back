@@ -1,4 +1,11 @@
 export interface EnvConfigService {
+  getCookieSecret(): string;
+  getCookieSameSite(): string;
+  getCookieSecure(): boolean;
+  getCookieDomain(): string;
+  getJwtSecret(): string;
+  getJwtSecret(): string;
+  getJwtExpiresInSeconds(): number;
   getSalts(): number;
   // getAllowedOrigins(): string[]
   getPort(): number;

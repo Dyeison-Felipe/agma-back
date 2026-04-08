@@ -3,6 +3,28 @@ import { ConfigService } from '@nestjs/config';
 
 export class EnvConfigServiceImpl implements EnvConfigService {
   constructor(private readonly configService: ConfigService) {}
+
+  getCookieSecret(): string {
+    return this.configService.get<string>('COOKIE_SECRET') as string;
+  }
+  getCookieSameSite(): string {
+    return this.configService.get<string>('COOKIE_SAME_SITE') as string;
+  }
+  getCookieSecure(): boolean {
+    return this.configService.get<string>('COOKIE_SECURE') === 'true';
+  }
+  getCookieDomain(): string {
+    return this.configService.get<string>('COOKIE_DOMAIN') as string;
+  }
+
+  getJwtSecret(): string {
+    return this.configService.get<string>('JWT_SECRET') as string;
+  }
+
+  getJwtExpiresInSeconds(): number {
+    return +(this.configService.get<string>('JWT_EXPIRES_IN') as string);
+  }
+
   getSalts(): number {
     return +(this.configService.get<string>('SALTS') as string);
   }

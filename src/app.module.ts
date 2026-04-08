@@ -7,6 +7,9 @@ import { TransparencyTypeModule } from './core/transparency-type/transparency-ty
 import { RoleModule } from './core/role/role.module';
 import { UserModule } from './core/user/user.module';
 import { HashModule } from './shared/hash/hash.module';
+import { JwtConfigModule } from './shared/jwt/jwt.module';
+import { LoggedUserModule } from './shared/logged-user/logged-user.module';
+import { AuthModule } from './core/auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +21,9 @@ import { HashModule } from './shared/hash/hash.module';
     RoleModule,
     UserModule,
     HashModule,
+    JwtConfigModule,
+    LoggedUserModule,
+    AuthModule
   ],
   controllers: [],
   providers: [],
