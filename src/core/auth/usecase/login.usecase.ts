@@ -28,11 +28,7 @@ export class LoginUseCase implements UseCase<Input, Output> {
     private readonly envConfigService: EnvConfigService,
   ) {}
 
-  async execute({
-    email,
-    password,
-    setCookie,
-  }: Input): Promise<LoginOutput> {
+  async execute({ email, password, setCookie }: Input): Promise<LoginOutput> {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user || !user.active) {
@@ -69,9 +65,11 @@ export class LoginUseCase implements UseCase<Input, Output> {
         email: user.email,
         name: user.name,
         active: user.active,
-        role: user.role
+        role: {
+          id: user.role.id,
+          name: user.role.name,
+        },
       },
-      token: token,
     };
 
     return output;
