@@ -11,8 +11,7 @@ import { HashService } from '@/shared/hash/hash.interface';
 import { EnvConfigService } from '@/shared/env-config/env-config.interface';
 import { PROVIDERS } from '@/shared/constants/providers';
 import { Reflector } from '@nestjs/core';
-import { AuthGuard } from './guard/auth.guard';
-import { RolesGuard } from './guard/role.guard';
+import { LogoutUseCase } from './usecase/logout.usecase';
 
 @Global()
 @Module({
@@ -42,7 +41,14 @@ import { RolesGuard } from './guard/role.guard';
         PROVIDERS.ENV_CONFIG_SERVICE,
       ],
     },
+    {
+      provide: LogoutUseCase,
+      useFactory: (envConfigService: EnvConfigService) => {
+        return new LogoutUseCase(envConfigService);
+      },
+      inject: [PROVIDERS.ENV_CONFIG_SERVICE],
+    },
   ],
-  exports: [Reflector ]
+  exports: [Reflector],
 })
 export class AuthModule {}

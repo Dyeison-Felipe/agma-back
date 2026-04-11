@@ -11,6 +11,7 @@ import {
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiOperation,
+  ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -19,11 +20,15 @@ import { LoginDto } from './usecase/dto/login.dto';
 import { LoginPresenter } from '@/shared/presenters/auth/login.presenter';
 import { FastifyReply } from 'fastify';
 import { Public } from '@/shared/decorators/public.decorator';
+import { LogoutUseCase } from './usecase/logout.usecase';
 
 @ApiTags('Auth')
 @Controller('/v1/auth')
 export class AuthController {
-  constructor(private readonly loginUseCase: LoginUseCase) {}
+  constructor(
+    private readonly loginUseCase: LoginUseCase,
+    private readonly logoutUseCase: LogoutUseCase,
+  ) {}
 
   @Post('/login')
   @Public()
@@ -45,6 +50,23 @@ export class AuthController {
     return await this.loginUseCase.execute({
       ...loginRequestDto,
       setCookie: reply.setCookie.bind(reply),
+    });
+  }
+
+  @ApiOperation({ summary: 'Faz o logout de um usuário' })
+  @ApiResponse({
+    status: 204,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Erro desconhecido',
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Public()
+  @Post('/logout')
+  async logout(@Res({ passthrough: true }) reply: FastifyReply): Promise<void> {
+    return await this.logoutUseCase.execute({
+      clearCookie: reply.clearCookie.bind(reply),
     });
   }
 }

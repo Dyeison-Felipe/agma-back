@@ -20,11 +20,9 @@ type Output = LoginOutput;
 
 export class LoginUseCase implements UseCase<Input, Output> {
   constructor(
-    @Inject(PROVIDERS.JWT_SERVICE) private readonly jwtService: JwtService,
-    @Inject(PROVIDERS.USER_REPOSITORY)
+    private readonly jwtService: JwtService,
     private readonly userRepository: UserRepository,
-    @Inject(PROVIDERS.HASH_SERVICE) private readonly hashService: HashService,
-    @Inject(PROVIDERS.ENV_CONFIG_SERVICE)
+    private readonly hashService: HashService,
     private readonly envConfigService: EnvConfigService,
   ) {}
 
