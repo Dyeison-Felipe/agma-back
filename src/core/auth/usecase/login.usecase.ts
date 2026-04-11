@@ -1,6 +1,5 @@
 import { UserRepository } from '@/core/user/user.interface';
 import { AuthConstants } from '@/shared/constants/auth';
-import { PROVIDERS } from '@/shared/constants/providers';
 import { CookieOptions } from '@/shared/cookies/cookies';
 import { EnvConfigService } from '@/shared/env-config/env-config.interface';
 import { UnauthorizedError } from '@/shared/errors/unauthorized-error';
@@ -8,7 +7,6 @@ import { HashService } from '@/shared/hash/hash.interface';
 import { JwtService } from '@/shared/jwt/jwt.interface';
 import { LoginOutput } from '@/shared/output/login/login.output';
 import { UseCase } from '@/shared/usecase/usecase';
-import { Inject } from '@nestjs/common';
 
 type Input = {
   email: string;

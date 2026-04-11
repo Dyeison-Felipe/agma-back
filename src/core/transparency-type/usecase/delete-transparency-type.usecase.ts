@@ -1,10 +1,9 @@
-import { PROVIDERS } from '@/shared/constants/providers';
-import { UseCase } from '@/shared/usecase/usecase';
-import { Inject } from '@nestjs/common';
-import type { TransparencyTypeRepository } from '../transparency-type.interface';
+import { Transactional } from '@/shared/decorators/transactional.decorator';
+import { BadRequestError } from '@/shared/errors/bad-request-error';
 import { NotFoundError } from '@/shared/errors/not-found-error';
 import type { SupabaseService } from '@/shared/supabase/supabase.interface';
-import { BadRequestError } from '@/shared/errors/bad-request-error';
+import { UseCase } from '@/shared/usecase/usecase';
+import type { TransparencyTypeRepository } from '../transparency-type.interface';
 
 type Input = {
   id: string;
@@ -18,6 +17,7 @@ export class DeleteTransparencyTypeUseCase implements UseCase<Input, Output> {
     private readonly supabaseSerice: SupabaseService,
   ) {}
 
+  @Transactional()
   async execute({ id }: Input): Promise<void> {
     const transparencyType =
       await this.transparencyTypeRepository.findTransparenciesByType(id);

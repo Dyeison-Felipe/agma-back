@@ -1,8 +1,9 @@
-import { UseCase } from '@/shared/usecase/usecase';
-import { RoleRepository } from '../role.interface';
 import { PROVIDERS } from '@/shared/constants/providers';
-import { Inject } from '@nestjs/common';
+import { Transactional } from '@/shared/decorators/transactional.decorator';
 import { NotFoundError } from '@/shared/errors/not-found-error';
+import { UseCase } from '@/shared/usecase/usecase';
+import { Inject } from '@nestjs/common';
+import { RoleRepository } from '../role.interface';
 
 type Input = { roleId: string };
 
@@ -14,6 +15,7 @@ export class DeleteRoleUseCase implements UseCase<Input, Output> {
     private readonly roleRepository: RoleRepository,
   ) {}
 
+  @Transactional()
   async execute({ roleId }: Input): Promise<Output> {
     const role = await this.roleRepository.findById(roleId);
 

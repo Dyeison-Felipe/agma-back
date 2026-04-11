@@ -1,11 +1,11 @@
 import { PROVIDERS } from '@/shared/constants/providers';
+import { Transactional } from '@/shared/decorators/transactional.decorator';
+import { BadRequestError } from '@/shared/errors/bad-request-error';
+import { ConflictError } from '@/shared/errors/conflict-error';
+import { RoleOutput } from '@/shared/output/role/role-output';
 import { UseCase } from '@/shared/usecase/usecase';
 import { Inject } from '@nestjs/common';
 import { RoleRepository } from '../role.interface';
-import { ConflictError } from '@/shared/errors/conflict-error';
-import { RoleEntity } from '../entities/role.entity';
-import { RoleOutput } from '@/shared/output/role/role-output';
-import { BadRequestError } from '@/shared/errors/bad-request-error';
 
 type Input = { name: string };
 
@@ -16,6 +16,8 @@ export class CreateRoleUseCase implements UseCase<Input, Output> {
     @Inject(PROVIDERS.ROLE_REPOSITORY)
     private readonly roleRepository: RoleRepository,
   ) {}
+
+  @Transactional()
   async execute({ name }: Input): Promise<Output> {
     const existRole = await this.roleRepository.findByName(name);
 

@@ -1,9 +1,10 @@
+import type { TransparencyTypeRepository } from '@/core/transparency-type/transparency-type.interface';
+import { Transactional } from '@/shared/decorators/transactional.decorator';
+import { FileDto } from '@/shared/dto/file.dto';
+import { TransparencyPortalOutput } from '@/shared/output/trasnparency-portal/transparency-portal.output';
+import type { SupabaseService } from '@/shared/supabase/supabase.interface';
 import { UseCase } from '@/shared/usecase/usecase';
 import type { TransparencyPortalRepository } from '../transparency-portal.interface';
-import type { SupabaseService } from '@/shared/supabase/supabase.interface';
-import type { TransparencyTypeRepository } from '@/core/transparency-type/transparency-type.interface';
-import { TransparencyPortalOutput } from '@/shared/output/trasnparency-portal/transparency-portal.output';
-import { FileDto } from '@/shared/dto/file.dto';
 
 type Input = {
   transparencyType: {
@@ -21,6 +22,7 @@ export class CreateTransparencyPortalUseCase implements UseCase<Input, Output> {
     private readonly transparencyTypeRepository: TransparencyTypeRepository,
   ) {}
 
+  @Transactional()
   async execute(input: Input): Promise<Output> {
     const transparencyType = await this.transparencyTypeRepository.findById(
       input.transparencyType.id,

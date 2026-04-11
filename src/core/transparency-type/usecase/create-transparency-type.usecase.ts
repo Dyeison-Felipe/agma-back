@@ -1,10 +1,9 @@
-import { PROVIDERS } from '@/shared/constants/providers';
-import { UseCase } from '@/shared/usecase/usecase';
-import { Inject } from '@nestjs/common';
-import type { TransparencyTypeRepository } from '../transparency-type.interface';
-import { TransparencyTypeOutput } from '@/shared/output/transparency-type/transparency-type.output';
+import { Transactional } from '@/shared/decorators/transactional.decorator';
 import { BadRequestError } from '@/shared/errors/bad-request-error';
 import { ConflictError } from '@/shared/errors/conflict-error';
+import { TransparencyTypeOutput } from '@/shared/output/transparency-type/transparency-type.output';
+import { UseCase } from '@/shared/usecase/usecase';
+import type { TransparencyTypeRepository } from '../transparency-type.interface';
 
 type Input = {
   name: string;
@@ -16,6 +15,8 @@ export class CreateTransparencyTypeUseCase implements UseCase<Input, Output> {
   constructor(
     private readonly transparencyTypeRepository: TransparencyTypeRepository,
   ) {}
+
+  @Transactional()
   async execute(input: Input): Promise<Output> {
     const transparencyType = await this.transparencyTypeRepository.findByName(
       input.name,

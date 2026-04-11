@@ -1,9 +1,9 @@
 import { PROVIDERS } from '@/shared/constants/providers';
+import { Transactional } from '@/shared/decorators/transactional.decorator';
+import { NotFoundError } from '@/shared/errors/not-found-error';
 import { UseCase } from '@/shared/usecase/usecase';
 import { Inject } from '@nestjs/common';
 import { UserRepository } from '../user.interface';
-import { UserOutput } from '@/shared/output/user/create-user.output';
-import { NotFoundError } from '@/shared/errors/not-found-error';
 
 type Input = { idUser: string };
 
@@ -15,16 +15,17 @@ export class DeleteUserUseCase implements UseCase<Input, Output> {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async execute({idUser}: Input): Promise<Output> {
+  @Transactional()
+  async execute({ idUser }: Input): Promise<Output> {
     const user = await this.userRepository.findById(idUser);
 
     if (!user) {
       throw new NotFoundError(`Nenhum usuário encontrado`);
     }
 
-    user.active = false
-    user.deletedAt = new Date()
+    user.active = false;
+    user.deletedAt = new Date();
 
-    await this.userRepository.update(user)
+    await this.userRepository.update(user);
   }
 }

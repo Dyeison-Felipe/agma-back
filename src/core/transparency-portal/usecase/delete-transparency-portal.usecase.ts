@@ -1,11 +1,9 @@
-import { PROVIDERS } from '@/shared/constants/providers';
-import { UseCase } from '@/shared/usecase/usecase';
-import { Inject } from '@nestjs/common';
-import { TransparencyPortalRepository } from '../transparency-portal.interface';
 import { TransparencyTypeRepository } from '@/core/transparency-type/transparency-type.interface';
+import { Transactional } from '@/shared/decorators/transactional.decorator';
 import { NotFoundError } from '@/shared/errors/not-found-error';
 import { SupabaseService } from '@/shared/supabase/supabase.interface';
-import { Transactional } from '@/shared/decorators/transactional.decorator';
+import { UseCase } from '@/shared/usecase/usecase';
+import { TransparencyPortalRepository } from '../transparency-portal.interface';
 
 type Input = { typeId: string; documentId: string };
 

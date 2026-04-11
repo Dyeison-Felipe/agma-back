@@ -1,14 +1,14 @@
+import { RoleRepository } from '@/core/role/role.interface';
 import { PROVIDERS } from '@/shared/constants/providers';
+import { Transactional } from '@/shared/decorators/transactional.decorator';
+import { BadRequestError } from '@/shared/errors/bad-request-error';
+import { ConflictError } from '@/shared/errors/conflict-error';
+import { NotFoundError } from '@/shared/errors/not-found-error';
+import { HashService } from '@/shared/hash/hash.interface';
+import { UserOutput } from '@/shared/output/user/create-user.output';
 import { UseCase } from '@/shared/usecase/usecase';
 import { Inject } from '@nestjs/common';
 import { UserRepository } from '../user.interface';
-import { RoleRepository } from '@/core/role/role.interface';
-import { NotFoundError } from '@/shared/errors/not-found-error';
-import { HashService } from '@/shared/hash/hash.interface';
-import { ConflictError } from '@/shared/errors/conflict-error';
-import { UserEntity } from '../entities/user.entity';
-import { BadRequestError } from '@/shared/errors/bad-request-error';
-import { UserOutput } from '@/shared/output/user/create-user.output';
 
 type Input = {
   name: string;
@@ -29,6 +29,7 @@ export class CreateUserUseCase implements UseCase<Input, Output> {
     private readonly hashService: HashService,
   ) {}
 
+  @Transactional()
   async execute({ email, name, password, roleId }: Input): Promise<Output> {
     const existUser = await this.userRepository.findByEmail(email);
 

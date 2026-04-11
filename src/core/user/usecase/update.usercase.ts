@@ -1,10 +1,11 @@
+import { RoleRepository } from '@/core/role/role.interface';
 import { PROVIDERS } from '@/shared/constants/providers';
+import { Transactional } from '@/shared/decorators/transactional.decorator';
+import { NotFoundError } from '@/shared/errors/not-found-error';
+import { UserOutput } from '@/shared/output/user/create-user.output';
 import { UseCase } from '@/shared/usecase/usecase';
 import { Inject } from '@nestjs/common';
 import { UserRepository } from '../user.interface';
-import { RoleRepository } from '@/core/role/role.interface';
-import { NotFoundError } from '@/shared/errors/not-found-error';
-import { UserOutput } from '@/shared/output/user/create-user.output';
 
 type Input = {
   userId: string;
@@ -24,6 +25,7 @@ export class UpdateUserUseCase implements UseCase<Input, Output> {
     private readonly roleRepository: RoleRepository,
   ) {}
 
+  @Transactional()
   async execute({
     email,
     name,
