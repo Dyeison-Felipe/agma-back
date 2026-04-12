@@ -28,7 +28,7 @@ export class DeleteTransparencyTypeUseCase implements UseCase<Input, Output> {
 
     if (
       transparencyType.transparencyPortal &&
-      transparencyType.transparencyPortal?.length > 1
+      transparencyType.transparencyPortal?.length >= 1
     ) {
       throw new BadRequestError(
         `Não é possivel remover um tipo de transparência que possui documentos vinculados `,
