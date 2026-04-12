@@ -5,7 +5,7 @@ import { SupabaseService } from '@/shared/supabase/supabase.interface';
 import { UseCase } from '@/shared/usecase/usecase';
 import { TransparencyPortalRepository } from '../transparency-portal.interface';
 
-type Input = { typeId: string; documentId: string };
+type Input = { documentId: string };
 
 type Output = void;
 
@@ -20,17 +20,9 @@ export class DeleteDocumentTransparencyPortalUseCase implements UseCase<
   ) {}
 
   @Transactional()
-  async execute({ documentId, typeId }: Input): Promise<Output> {
-    const transparencyType =
-      await this.transparencyTypeRepository.findById(typeId);
-
-    if (!transparencyType) {
-      throw new NotFoundError(`Tipo de transparência não encontrado`);
-    }
-
+  async execute({ documentId }: Input): Promise<Output> {
     const document =
       await this.transparencyPortalRepository.findDocumentByTypeIdAndDocumentId(
-        transparencyType.id,
         documentId,
       );
 
