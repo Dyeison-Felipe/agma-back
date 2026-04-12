@@ -1,11 +1,11 @@
-import { UseCase } from '@/shared/usecase/usecase';
-import type { TransparencyPortalRepository } from '../transparency-portal.interface';
-import { Pagination } from '@/shared/presenters/pagination/pagination.presenter';
-import { PaginationDto } from '@/shared/dto/pagination.dto';
 import type { TransparencyTypeRepository } from '@/core/transparency-type/transparency-type.interface';
+import { PaginationDto } from '@/shared/dto/pagination.dto';
+import { EnvConfigService } from '@/shared/env-config/env-config.interface';
 import { NotFoundError } from '@/shared/errors/not-found-error';
 import { TransparencyPortalPaginatedOutput } from '@/shared/output/trasnparency-portal/transparency-portal-paginated.output';
-import { EnvConfigService } from '@/shared/env-config/env-config.interface';
+import { Pagination } from '@/shared/presenters/pagination/pagination.presenter';
+import { UseCase } from '@/shared/usecase/usecase';
+import type { TransparencyPortalRepository } from '../transparency-portal.interface';
 
 type Input = { transparencyTypeId?: string; pagination: PaginationDto };
 

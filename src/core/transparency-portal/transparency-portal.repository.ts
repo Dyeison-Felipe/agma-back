@@ -1,19 +1,14 @@
+import { paginateQuery } from '@/shared/database/paginate-query/paginate-query';
+import { PaginationDto } from '@/shared/dto/pagination.dto';
+import { Pagination } from '@/shared/pagination-repository/pagination';
 import { Injectable } from '@nestjs/common';
-import { CreateTransparencyPortalDto } from './dto/create-transparency-portal.dto';
-import { UpdateTransparencyPortalDto } from './dto/update-transparency-portal.dto';
-import {
-  FindAllFilters,
-  TransparencyPortalRepository,
-} from './transparency-portal.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TransparencyPortalEntity } from './entities/transparency-portal.entity';
 import {
-  Pagination,
-  PaginationInput,
-} from '@/shared/pagination-repository/pagination';
-import { PaginationDto } from '@/shared/dto/pagination.dto';
-import { paginateQuery } from '@/shared/database/paginate-query/paginate-query';
+  FindAllFilters,
+  TransparencyPortalRepository,
+} from './transparency-portal.interface';
 
 @Injectable()
 export class TransparencyPortalServiceImpl implements TransparencyPortalRepository {
@@ -23,11 +18,10 @@ export class TransparencyPortalServiceImpl implements TransparencyPortalReposito
   ) {}
 
   async findDocumentByTypeIdAndDocumentId(
-    typeId: string,
     documentId: string,
   ): Promise<TransparencyPortalEntity | null> {
     const transparencyDocument = await this.transparencyRepository.findOne({
-      where: { id: documentId, transparencyType: { id: typeId } },
+      where: { id: documentId },
     });
 
     if (!transparencyDocument) return null;

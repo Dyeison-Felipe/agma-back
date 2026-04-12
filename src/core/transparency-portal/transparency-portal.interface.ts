@@ -1,6 +1,6 @@
+import { PaginationDto } from '@/shared/dto/pagination.dto';
 import { Pagination } from '@/shared/pagination-repository/pagination';
 import { TransparencyPortalEntity } from './entities/transparency-portal.entity';
-import { PaginationDto } from '@/shared/dto/pagination.dto';
 
 export type FindAllFilters = {
   typeId?: string;
@@ -18,7 +18,6 @@ export interface TransparencyPortalRepository {
     filter?: FindAllFilters,
   ): Promise<Pagination<TransparencyPortalEntity>>;
   findDocumentByTypeIdAndDocumentId(
-    typeId: string,
     documentId: string,
   ): Promise<TransparencyPortalEntity | null>;
 }
