@@ -3,7 +3,6 @@ import { createClient } from '@supabase/supabase-js';
 import { PROVIDERS } from '../constants/providers';
 import type { EnvConfigService } from '../env-config/env-config.interface';
 import { SupabaseService } from './supabase.interface';
-import { SupabaseStorages } from '../enums/supabase-storages.enum';
 
 @Injectable()
 export class SupabaseServiceImpl implements SupabaseService {
@@ -90,7 +89,7 @@ export class SupabaseServiceImpl implements SupabaseService {
   }
 
   async deleteFileByUrl(url: string): Promise<void> {
-    const marker = '/object/public/agma/';
+    const marker = 'agma/';
     const idx = url.indexOf(marker);
 
     if (idx === -1) {
