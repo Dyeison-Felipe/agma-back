@@ -1,3 +1,9 @@
+import { ROLE } from '@/shared/constants/roles';
+import { Public } from '@/shared/decorators/public.decorator';
+import { Roles } from '@/shared/decorators/role.decorator';
+import { CreateTransparencyTypePresenter } from '@/shared/presenters/transparency-type/create-transparency-type.presenter';
+import { FindAllTransparencyTypePresenter } from '@/shared/presenters/transparency-type/find-all-transparency-type.presenter';
+import { UpdateTransparencyTypePresenter } from '@/shared/presenters/transparency-type/update-transparency-type.presenter';
 import {
   Body,
   Controller,
@@ -7,8 +13,6 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { CreateTransparencyTypeDto } from './dto/create-transparency-type.dto';
-import { CreateTransparencyTypeUseCase } from './usecase/create-transparency-type.usecase';
 import {
   ApiBody,
   ApiConflictResponse,
@@ -19,18 +23,14 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateTransparencyTypePresenter } from '@/shared/presenters/transparency-type/create-transparency-type.presenter';
-import { FindAllTransparencyTypeUseCase } from './usecase/find-all-transparency.usecase';
-import { FindAllTransparencyTypePresenter } from '@/shared/presenters/transparency-type/find-all-transparency-type.presenter';
-import { UpdateTransparencyTypeUseCase } from './usecase/update-transparency-type.usecase';
+import { CreateTransparencyTypeDto } from './dto/create-transparency-type.dto';
 import { UpdateTransparencyTypeDto } from './dto/update-transparency-type.dto';
-import { UpdateTransparencyTypePresenter } from '@/shared/presenters/transparency-type/update-transparency-type.presenter';
+import { CreateTransparencyTypeUseCase } from './usecase/create-transparency-type.usecase';
 import { DeleteTransparencyTypeUseCase } from './usecase/delete-transparency-type.usecase';
-import { Roles } from '@/shared/decorators/role.decorator';
-import { ROLE } from '@/shared/constants/roles';
+import { FindAllTransparencyTypeUseCase } from './usecase/find-all-transparency.usecase';
+import { UpdateTransparencyTypeUseCase } from './usecase/update-transparency-type.usecase';
 
 @ApiTags('TransparencyType')
-@Roles(ROLE.ADMIN)
 @Controller('v1/transparency-type')
 export class TransparencyTypeController {
   constructor(
@@ -40,6 +40,7 @@ export class TransparencyTypeController {
     private readonly deleteTransparencyTypeUseCase: DeleteTransparencyTypeUseCase,
   ) {}
 
+  @Roles(ROLE.ADMIN)
   @Post()
   @ApiOperation({ summary: 'Criar um tipo de transparência' })
   @ApiBody({
@@ -62,6 +63,7 @@ export class TransparencyTypeController {
     return await this.createTransparencyTypeUseCase.execute(dto);
   }
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Buscar todos os tipos de transparência' })
   @ApiOkResponse({
@@ -79,6 +81,7 @@ export class TransparencyTypeController {
     return await this.findAllTransparencyTypeUseCase.execute();
   }
 
+  @Roles(ROLE.ADMIN)
   @ApiOperation({ summary: 'Atualizar um tipo de transparência' })
   @ApiOkResponse({
     description: 'Tipos de transparência atualizado com sucesso',
@@ -98,6 +101,7 @@ export class TransparencyTypeController {
     return await this.updateTransparencyTypeUseCase.execute(updateDto);
   }
 
+  @Roles(ROLE.ADMIN)
   @ApiOperation({ summary: 'Deletar um tipo de transparência' })
   @ApiOkResponse({
     description: 'Tipo de transparência deletado com sucesso',
