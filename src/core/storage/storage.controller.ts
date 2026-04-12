@@ -1,4 +1,5 @@
 import { PROVIDERS } from '@/shared/constants/providers';
+import { Public } from '@/shared/decorators/public.decorator';
 import { SupabaseService } from '@/shared/supabase/supabase.interface';
 import {
   BadRequestException,
@@ -20,6 +21,7 @@ export class StorageController {
     private readonly supabaseService: SupabaseService,
   ) {}
 
+  @Public()
   @Get('*')
   async getFile(@Param() params: { '*': string }, @Res() reply: FastifyReply) {
     const path = params['*'];
