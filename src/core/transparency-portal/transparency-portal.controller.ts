@@ -1,17 +1,23 @@
+import { ROLE } from '@/shared/constants/roles';
+import { Multipart } from '@/shared/decorators/multipart.decorator';
+import { Public } from '@/shared/decorators/public.decorator';
+import { Roles } from '@/shared/decorators/role.decorator';
 import {
-  Controller,
-  Post,
+  MetaPresenter,
+  PaginatedResponse,
+  PaginationPresenter,
+} from '@/shared/presenters/pagination/pagination.presenter';
+import { CreateTransparencyPortalPresenter } from '@/shared/presenters/transparency-portal/create-transparency-portal.presenter';
+import { FindAllTransparencyPortalPaginatedPresenter } from '@/shared/presenters/transparency-portal/find-all-transparency-portal-paginated.presenter';
+import {
   Body,
-  Get,
-  Query,
+  Controller,
   Delete,
+  Get,
   Param,
+  Post,
+  Query,
 } from '@nestjs/common';
-import {
-  CreateTransparencyPortalDto,
-  CreateTransparencyPortalMultipartDto,
-} from './dto/create-transparency-portal.dto';
-import { CreateTransparencyPortalUseCase } from './usecase/create-transparency-portal.usecase';
 import {
   ApiBody,
   ApiConflictResponse,
@@ -24,19 +30,10 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { Multipart } from '@/shared/decorators/multipart.decorator';
-import { CreateTransparencyPortalPresenter } from '@/shared/presenters/transparency-portal/create-transparency-portal.presenter';
-import { FindAllPaginatedTransparencyByTypeUseCase } from './usecase/find-all-paginated-transparency-by-type.usecase';
-import {
-  MetaPresenter,
-  PaginatedResponse,
-  PaginationPresenter,
-} from '@/shared/presenters/pagination/pagination.presenter';
-import { FindAllTransparencyPortalPaginatedPresenter } from '@/shared/presenters/transparency-portal/find-all-transparency-portal-paginated.presenter';
+import { CreateTransparencyPortalMultipartDto } from './dto/create-transparency-portal.dto';
+import { CreateTransparencyPortalUseCase } from './usecase/create-transparency-portal.usecase';
 import { DeleteDocumentTransparencyPortalUseCase } from './usecase/delete-transparency-portal.usecase';
-import { Public } from '@/shared/decorators/public.decorator';
-import { Roles } from '@/shared/decorators/role.decorator';
-import { ROLE } from '@/shared/constants/roles';
+import { FindAllPaginatedTransparencyByTypeUseCase } from './usecase/find-all-paginated-transparency-by-type.usecase';
 
 @ApiTags('TransparencyPortal')
 @Controller('v1/transparency-portal')
@@ -129,13 +126,9 @@ export class TransparencyPortalController {
     description: 'Erro interno no servidor',
   })
   @Roles(ROLE.ADMIN)
-  @Delete('type/:typeId/document/:documentId')
-  async deleteDocument(
-    @Param('typeId') typeId: string,
-    @Param('documentId') documentId: string,
-  ): Promise<void> {
+  @Delete('/:documentId')
+  async deleteDocument(@Param('documentId') documentId: string): Promise<void> {
     await this.deleteDocumentTransparencyPortalUseCase.execute({
-      typeId,
       documentId,
     });
   }
