@@ -1,17 +1,17 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { PROVIDERS } from './shared/constants/providers';
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { DataSource } from 'typeorm';
 import {
   initializeTransactionalContext,
   StorageDriver,
 } from 'typeorm-transactional';
+import { AppModule } from './app.module';
 import { globalConfig } from './global-config';
+import { PROVIDERS } from './shared/constants/providers';
 import { runSeeds } from './shared/database/seeders/run';
-import { DataSource } from 'typeorm';
 
 async function bootstrap() {
   initializeTransactionalContext({ storageDriver: StorageDriver.AUTO });
@@ -29,6 +29,6 @@ async function bootstrap() {
   const dataSource = app.get(DataSource);
   await runSeeds(dataSource);
 
-  await app.listen(envConfig.getPort());
+  await app.listen(envConfig.getPort(), '0.0.0.0');
 }
 bootstrap();
