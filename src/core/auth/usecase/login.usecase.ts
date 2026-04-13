@@ -48,7 +48,7 @@ export class LoginUseCase implements UseCase<Input, Output> {
       httpOnly: true,
       maxAge: jwtExpiresInSeconds,
       path: '/',
-      domain: this.envConfigService.getCookieDomain(),
+      // domain: this.envConfigService.getCookieDomain(),
       secure: this.envConfigService.getCookieSecure(),
       sameSite: this.envConfigService.getCookieSameSite(),
     };
