@@ -1,4 +1,5 @@
 import { UserRepository } from '@/core/user/user.interface';
+import { AuthConstants } from '@/shared/constants/auth';
 import { PROVIDERS } from '@/shared/constants/providers';
 import { IS_PUBLIC_KEY } from '@/shared/decorators/public.decorator';
 import { UnauthorizedError } from '@/shared/errors/unauthorized-error';
@@ -36,7 +37,7 @@ export class AuthGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest<FastifyRequest>();
 
-    const token = request.cookies?.developmentAuthToken;
+    const token = request.cookies[AuthConstants.tokenName];
     // const token = request.headers['authorization']?.split(' ')[1];
 
     if (!token) {

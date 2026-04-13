@@ -22,7 +22,7 @@ export class LogoutUseCase implements UseCase<Input, Output> {
       httpOnly: true,
       maxAge: this.envConfigService.getJwtExpiresInSeconds(),
       path: '/',
-      domain: this.envConfigService.getCookieDomain(),
+      // domain: this.envConfigService.getCookieDomain(),
       secure: this.envConfigService.getCookieSecure(),
       sameSite: this.envConfigService.getCookieSameSite(),
     });
