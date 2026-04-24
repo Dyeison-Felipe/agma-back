@@ -17,6 +17,8 @@ import { JwtService } from './shared/jwt/jwt.interface';
 import { UserRepository } from './core/user/user.interface';
 import { LoggedUserService } from './shared/logged-user/logged-user.interface';
 import { PROVIDERS } from './shared/constants/providers';
+import { QuestionsModule } from './core/questions/questions.module';
+import { QuestionOptionsModule } from './core/question-options/question-options.module';
 
 @Module({
   imports: [
@@ -30,7 +32,9 @@ import { PROVIDERS } from './shared/constants/providers';
     HashModule,
     JwtConfigModule,
     LoggedUserModule,
-    AuthModule
+    AuthModule,
+    QuestionsModule,
+    QuestionOptionsModule
   ],
   controllers: [],
   providers: [
