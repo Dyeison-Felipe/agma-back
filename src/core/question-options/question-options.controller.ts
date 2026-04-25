@@ -1,34 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { QuestionOptionsService } from './question-options.service';
-import { CreateQuestionOptionDto } from './dto/create-question-option.dto';
-import { UpdateQuestionOptionDto } from './dto/update-question-option.dto';
+import { CreateQuestionOptionDto } from '@/core/question-options/dto/create-question-option.dto';
+import { CreateQuestionOptionsUseCase } from '@/core/question-options/usecase/create-options.usecase';
+import { FindAllOptionsByQuestionUseCase } from '@/core/question-options/usecase/find-all-option-by-question-id.usecase';
+import { Public } from '@/shared/decorators/public.decorator';
+import { CreateQuestionOptionPresenter } from '@/shared/presenters/question-options/create-question-option.presenter';
+import { FindAllOptionsByQuestionPresenter } from '@/shared/presenters/question-options/find-all-options-by-questions.presenter';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 
-@Controller('question-options')
+@Controller('/v1/question-options')
 export class QuestionOptionsController {
-  constructor(private readonly questionOptionsService: QuestionOptionsService) {}
+  constructor(
+    private readonly createQuestionOptionsUseCase: CreateQuestionOptionsUseCase,
+    private readonly findAllOptionByQuestionUseCase: FindAllOptionsByQuestionUseCase,
+  ) {}
 
   @Post()
-  create(@Body() createQuestionOptionDto: CreateQuestionOptionDto) {
-    return this.questionOptionsService.create(createQuestionOptionDto);
+  @Public()
+  async create(
+    @Body() dto: CreateQuestionOptionDto,
+  ): Promise<CreateQuestionOptionPresenter> {
+    return await this.createQuestionOptionsUseCase.execute(dto);
   }
 
   @Get()
-  findAll() {
-    return this.questionOptionsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.questionOptionsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateQuestionOptionDto: UpdateQuestionOptionDto) {
-    return this.questionOptionsService.update(+id, updateQuestionOptionDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.questionOptionsService.remove(+id);
+  @Public()
+  async findAllOptions(): Promise<FindAllOptionsByQuestionPresenter[]> {
+    return await this.findAllOptionByQuestionUseCase.execute();
   }
 }

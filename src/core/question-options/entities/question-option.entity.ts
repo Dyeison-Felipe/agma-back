@@ -1,12 +1,13 @@
-import { QuestionEntity } from "@/core/questions/entities/question.entity";
-import { BaseSchema } from "@/shared/database/schema/base-schema";
-import { Column, Entity, OneToMany } from "typeorm";
+import { QuestionEntity } from '@/core/questions/entities/question.entity';
+import { BaseSchema } from '@/shared/database/schema/base-schema';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
-@Entity('questionoptions')
-export class QuestionOptionEntity extends BaseSchema{
-  @Column({ name: 'option', nullable: false})
+@Entity('question-options')
+export class QuestionOptionEntity extends BaseSchema {
+  @Column({ name: 'option', nullable: false })
   option: string;
 
-  @OneToMany(() => QuestionEntity, (question) => question.questionOption)
-  question: QuestionEntity[];
+  @ManyToOne(() => QuestionEntity, (question) => question.options)
+  @JoinColumn({ name: 'question_id' })
+  question: QuestionEntity;
 }

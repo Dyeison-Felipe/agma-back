@@ -1,34 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { QuestionsService } from './questions.service';
+import { CreateQuestionUseCase } from '@/core/questions/usecase/create-question.usecase';
+import { Public } from '@/shared/decorators/public.decorator';
+import { CreateQuestionPresenter } from '@/shared/presenters/question/create-question.presenter';
+import { Body, Controller, Post } from '@nestjs/common';
 import { CreateQuestionDto } from './dto/create-question.dto';
-import { UpdateQuestionDto } from './dto/update-question.dto';
 
-@Controller('questions')
+@Controller('/v1/question')
 export class QuestionsController {
-  constructor(private readonly questionsService: QuestionsService) {}
+  constructor(private readonly createQuestionUseCase: CreateQuestionUseCase) {}
 
   @Post()
-  create(@Body() createQuestionDto: CreateQuestionDto) {
-    return this.questionsService.create(createQuestionDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.questionsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.questionsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateQuestionDto: UpdateQuestionDto) {
-    return this.questionsService.update(+id, updateQuestionDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.questionsService.remove(+id);
+  @Public()
+  async create(
+    @Body() createQuestionDto: CreateQuestionDto,
+  ): Promise<CreateQuestionPresenter> {
+    return await this.createQuestionUseCase.execute(createQuestionDto);
   }
 }
