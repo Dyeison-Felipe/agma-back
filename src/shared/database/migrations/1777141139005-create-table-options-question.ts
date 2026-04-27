@@ -24,6 +24,12 @@ export class CreateTableOptionsQuestion1777141139005 implements MigrationInterfa
             isNullable: false,
           },
           {
+            name: 'allows_custom_text',
+            type: 'boolean',
+            isNullable: false,
+            default: false,
+          },
+          {
             name: 'question_id',
             type: 'uuid',
             isNullable: false,

@@ -1,0 +1,27 @@
+export type FamilyOutput = {
+  id: string;
+  email: string;
+  respondent: string;
+  respondentOther?: string;
+  respondentCpf: string;
+  familyIncome: string;
+  imageAuthorization: boolean;
+  numberOfChildren: string;
+  residenceType: string;
+  residenceTypeOther?: string;
+  cep?: string | null;
+  street: string;
+  number: string;
+  neighborhood: string;
+  referencePoint?: string;
+  motherPhone: string;
+  fatherPhone?: string;
+  stepParentName?: string;
+  bpc: string;
+  crasRegistration: boolean;
+  municipalCard: boolean;
+  ciptea: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+};

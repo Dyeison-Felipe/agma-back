@@ -1,0 +1,20 @@
+export type AutisticOutput = {
+  id: string;
+  fullName: string;
+  birthDate: string;
+  gender: string;
+  motherName: string;
+  fatherName: string;
+  autismCondition: string;
+  supportLevel: string;
+  comorbidities: string;
+  comorbiditiesOther?: string;
+  multiprofessionalSupport: boolean;
+  usesMedication: boolean;
+  medicationNames?: string;
+  schoolGrade: string;
+  schoolName: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+};

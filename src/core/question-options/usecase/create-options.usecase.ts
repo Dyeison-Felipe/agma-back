@@ -10,6 +10,7 @@ import { Inject } from '@nestjs/common';
 type Input = {
   questionId: string;
   option: string;
+  allowsCustomText: boolean;
 };
 
 type Output = QuestionOptionsOutput;
@@ -22,7 +23,11 @@ export class CreateQuestionOptionsUseCase implements UseCase<Input, Output> {
     private readonly questionRepository: QuestionRepository,
   ) {}
 
-  async execute({ option, questionId }: Input): Promise<Output> {
+  async execute({
+    option,
+    questionId,
+    allowsCustomText,
+  }: Input): Promise<Output> {
     const question = await this.questionRepository.findById(questionId);
 
     if (!question) {
@@ -45,12 +50,14 @@ export class CreateQuestionOptionsUseCase implements UseCase<Input, Output> {
       question: question,
       createdAt: new Date(),
       updatedAt: new Date(),
+      allowsCustomText: allowsCustomText,
     });
 
     const output: Output = {
       id: createQuestionOption.id,
       option: createQuestionOption.option,
       question: createQuestionOption.question,
+      allowsCustomText: createQuestionOption.allowsCustomText,
     };
 
     return output;

@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsString, IsUUID, MaxLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsString,
+  IsUUID,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateQuestionOptionDto {
   @IsUUID()
@@ -9,4 +15,8 @@ export class CreateQuestionOptionDto {
   @IsNotEmpty()
   @MaxLength(255)
   option: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  allowsCustomText: boolean;
 }

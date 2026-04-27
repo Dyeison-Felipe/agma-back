@@ -7,6 +7,11 @@ import { Inject } from '@nestjs/common';
 
 type Input = void;
 
+export type QuestionOption = {
+  value: string;
+  allowsCustomText: boolean;
+};
+
 type Output = FindAllOptionsByQuestion[];
 
 export class FindAllOptionsByQuestionUseCase implements UseCase<Input, Output> {
@@ -38,7 +43,10 @@ export class FindAllOptionsByQuestionUseCase implements UseCase<Input, Output> {
           };
         }
 
-        acc[questionId].options.push(item.option);
+        acc[questionId].options.push({
+          value: item.option,
+          allowsCustomText: item.allowsCustomText,
+        });
 
         return acc;
       },
