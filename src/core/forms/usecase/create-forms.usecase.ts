@@ -1,6 +1,7 @@
 import { AutisticChildRepository } from '@/core/autistic/autistic-child.interface';
 import { FamilyRepository } from '@/core/family/family.interface';
 import { PROVIDERS } from '@/shared/constants/providers';
+import { Transactional } from '@/shared/decorators/transactional.decorator';
 import { ConflictError } from '@/shared/errors/conflict-error';
 import { AutisticOutput } from '@/shared/output/autistic/autistic.output';
 import { FamilyOutput } from '@/shared/output/family/family.output';
@@ -62,6 +63,7 @@ export class CreateFormUseCase implements UseCase<Input, Output> {
     private readonly familyRepository: FamilyRepository,
   ) {}
 
+  @Transactional()
   async execute(input: Input): Promise<Output> {
     const existFamily = await this.familyRepository.findByCpf(
       input.respondentCpf,

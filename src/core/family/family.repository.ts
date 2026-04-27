@@ -17,6 +17,7 @@ export class FamilyRepositoryImpl implements FamilyRepository {
   async findByCpf(cpf: string): Promise<FamilyEntity | null> {
     const family = await this.familyRepository.findOne({
       where: { respondentCpf: cpf },
+      relations: ['autisticChild'],
     });
 
     if (!family) return null;
