@@ -2,10 +2,12 @@
 import { CreateFormDto } from '@/core/forms/dto/create-form.dto';
 import { CreateFormUseCase } from '@/core/forms/usecase/create-forms.usecase';
 import { FindAllFamilysPaginatedUseCase } from '@/core/forms/usecase/find-all-familys-paginated.usecase';
+import { FindFamilyByIdUseCase } from '@/core/forms/usecase/find-family-by-id.usecase';
 import { GenerateTokenUseCase } from '@/core/forms/usecase/generate-token.usecase';
 import { Public } from '@/shared/decorators/public.decorator';
 import { CreateFormPresenter } from '@/shared/presenters/form/create-form.presenter';
 import { FindAllFamilysPaginatePresenter } from '@/shared/presenters/form/find-all-familys-pagination.presenter';
+import { FindFamilyPresenter } from '@/shared/presenters/form/find-family.presenter';
 import { Pagination } from '@/shared/presenters/pagination/pagination.presenter';
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -17,6 +19,7 @@ export class FormController {
     private readonly createFormUseCase: CreateFormUseCase,
     private readonly findAllFamilisPaginatedUseCase: FindAllFamilysPaginatedUseCase,
     private readonly generateTokenUseCase: GenerateTokenUseCase,
+    private readonly findFamilyByIdUseCase: FindFamilyByIdUseCase,
   ) {}
 
   @Post()
@@ -53,5 +56,11 @@ export class FormController {
   @Public()
   async generateToken(@Param('id') id: string): Promise<{ token: string }> {
     return await this.generateTokenUseCase.execute({ id });
+  }
+
+  @Get('family/:cpf')
+  @Public()
+  async getFamily(@Param('cpf') cpf: string): Promise<FindFamilyPresenter> {
+    return await this.findFamilyByIdUseCase.execute({ cpf });
   }
 }

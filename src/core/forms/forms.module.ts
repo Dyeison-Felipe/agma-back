@@ -5,6 +5,7 @@ import { FamilyModule } from '@/core/family/family.module';
 import { FormController } from '@/core/forms/forms.controller';
 import { CreateFormUseCase } from '@/core/forms/usecase/create-forms.usecase';
 import { FindAllFamilysPaginatedUseCase } from '@/core/forms/usecase/find-all-familys-paginated.usecase';
+import { FindFamilyByIdUseCase } from '@/core/forms/usecase/find-family-by-id.usecase';
 import { GenerateTokenUseCase } from '@/core/forms/usecase/generate-token.usecase';
 import { PROVIDERS } from '@/shared/constants/providers';
 import { JwtService } from '@/shared/jwt/jwt.interface';
@@ -43,6 +44,13 @@ import { Module } from '@nestjs/common';
         return new GenerateTokenUseCase(familyRepository, jwtService);
       },
       inject: [PROVIDERS.FAMILY_REPOSITORY, PROVIDERS.JWT_SERVICE],
+    },
+    {
+      provide: FindFamilyByIdUseCase,
+      useFactory: (familyRepository: FamilyRepository) => {
+        return new FindFamilyByIdUseCase(familyRepository);
+      },
+      inject: [PROVIDERS.FAMILY_REPOSITORY],
     },
   ],
   exports: [],
