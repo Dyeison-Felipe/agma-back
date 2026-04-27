@@ -7,6 +7,7 @@ import { CreateFormUseCase } from '@/core/forms/usecase/create-forms.usecase';
 import { FindAllFamilysPaginatedUseCase } from '@/core/forms/usecase/find-all-familys-paginated.usecase';
 import { FindFamilyByIdUseCase } from '@/core/forms/usecase/find-family-by-id.usecase';
 import { GenerateTokenUseCase } from '@/core/forms/usecase/generate-token.usecase';
+import { UpdayeFamilyUseCase } from '@/core/forms/usecase/update-family.usecase';
 import { PROVIDERS } from '@/shared/constants/providers';
 import { JwtService } from '@/shared/jwt/jwt.interface';
 import { Module } from '@nestjs/common';
@@ -51,6 +52,25 @@ import { Module } from '@nestjs/common';
         return new FindFamilyByIdUseCase(familyRepository);
       },
       inject: [PROVIDERS.FAMILY_REPOSITORY],
+    },
+    {
+      provide: UpdayeFamilyUseCase,
+      useFactory: (
+        autistChildRepository: AutisticChildRepository,
+        familyRepository: FamilyRepository,
+        jwtService: JwtService,
+      ) => {
+        return new UpdayeFamilyUseCase(
+          autistChildRepository,
+          familyRepository,
+          jwtService,
+        );
+      },
+      inject: [
+        PROVIDERS.AUTISTIC_CHILD_REPOSITORY,
+        PROVIDERS.FAMILY_REPOSITORY,
+        PROVIDERS.JWT_SERVICE,
+      ],
     },
   ],
   exports: [],

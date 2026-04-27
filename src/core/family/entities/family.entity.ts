@@ -67,8 +67,8 @@ export class FamilyEntity extends BaseSchema {
   @Column({ name: 'ciptea' })
   ciptea: boolean;
 
-  @Column({ name: 'updateToken', nullable: true })
-  updateToken?: string;
+  @Column({ name: 'updateToken', type: 'varchar', nullable: true })
+  updateToken?: string | null;
 
   @OneToMany(() => AutisticChildEntity, (child) => child.family)
   autisticChild?: AutisticChildEntity[];
