@@ -3,7 +3,6 @@ import { FamilyRepository } from '@/core/family/family.interface';
 import { PROVIDERS } from '@/shared/constants/providers';
 import { Transactional } from '@/shared/decorators/transactional.decorator';
 import { NotFoundError } from '@/shared/errors/not-found-error';
-import { UnauthorizedError } from '@/shared/errors/unauthorized-error';
 import { JwtService } from '@/shared/jwt/jwt.interface';
 import { AutisticOutput } from '@/shared/output/autistic/autistic.output';
 import { FamilyOutput } from '@/shared/output/family/family.output';
@@ -14,7 +13,6 @@ import { Inject } from '@nestjs/common';
 
 type Input = {
   id: string;
-  token: string;
   email: string;
   respondent: string;
   respondentOther?: string;
@@ -60,7 +58,7 @@ type Output = {
   autisticChildren: AutisticOutput[];
 };
 
-export class UpdateFamilyUseCase implements UseCase<Input, Output> {
+export class AdminUpdateFamilyUseCase implements UseCase<Input, Output> {
   constructor(
     @Inject(PROVIDERS.AUTISTIC_CHILD_REPOSITORY)
     private readonly autistChildRepository: AutisticChildRepository,
@@ -75,18 +73,6 @@ export class UpdateFamilyUseCase implements UseCase<Input, Output> {
 
     if (!family) {
       throw new NotFoundError(`Família não encontrada`);
-    }
-
-    const isValidToken = await this.jwtService.verifyJwt(input.token);
-
-    if (!isValidToken) {
-      throw new UnauthorizedError(`Não autorizado`);
-    }
-
-    const equalTokenFamily = input.token === family.updateToken;
-
-    if (!equalTokenFamily) {
-      throw new UnauthorizedError(`Não autorizado`);
     }
 
     const cpfClean = isValidCPF(input.respondentCpf);

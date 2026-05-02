@@ -1,11 +1,13 @@
 // forms.controller.ts
+import { AdminUpdateFamilyFormDto } from '@/core/forms/dto/admin-update-family.dto';
 import { CreateFormDto } from '@/core/forms/dto/create-form.dto';
 import { UpdateFamilyFormDto } from '@/core/forms/dto/update-family.dto';
+import { AdminUpdateFamilyUseCase } from '@/core/forms/usecase/admin-update-family.usecase';
 import { CreateFormUseCase } from '@/core/forms/usecase/create-forms.usecase';
 import { FindAllFamilysPaginatedUseCase } from '@/core/forms/usecase/find-all-familys-paginated.usecase';
 import { FindFamilyByIdUseCase } from '@/core/forms/usecase/find-family-by-id.usecase';
 import { GenerateTokenUseCase } from '@/core/forms/usecase/generate-token.usecase';
-import { UpdayeFamilyUseCase } from '@/core/forms/usecase/update-family.usecase';
+import { UpdateFamilyUseCase } from '@/core/forms/usecase/update-family.usecase';
 import { Public } from '@/shared/decorators/public.decorator';
 import { CreateFormPresenter } from '@/shared/presenters/form/create-form.presenter';
 import { FindAllFamilysPaginatePresenter } from '@/shared/presenters/form/find-all-familys-pagination.presenter';
@@ -23,7 +25,8 @@ export class FormController {
     private readonly findAllFamilisPaginatedUseCase: FindAllFamilysPaginatedUseCase,
     private readonly generateTokenUseCase: GenerateTokenUseCase,
     private readonly findFamilyByIdUseCase: FindFamilyByIdUseCase,
-    private readonly updayeFamilyUseCase: UpdayeFamilyUseCase,
+    private readonly updayeFamilyUseCase: UpdateFamilyUseCase,
+    private readonly adminUpdayeFamilyUseCase: AdminUpdateFamilyUseCase,
   ) {}
 
   @Post()
@@ -93,5 +96,23 @@ export class FormController {
     @Body() dto: UpdateFamilyFormDto,
   ): Promise<UpdateFamilyPresenter> {
     return await this.updayeFamilyUseCase.execute(dto);
+  }
+
+  @Put('admin')
+  @ApiOperation({
+    summary: 'Admin Atualizar dados da família e filhos autistas',
+  })
+  @ApiResponse({
+    status: 200,
+    type: UpdateFamilyPresenter,
+    description: 'Família atualizada com sucesso',
+  })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 404, description: 'Família não encontrada' })
+  @ApiResponse({ status: 400, description: 'Dados inválidos' })
+  async adminUpdateFamily(
+    @Body() dto: AdminUpdateFamilyFormDto,
+  ): Promise<UpdateFamilyPresenter> {
+    return await this.adminUpdayeFamilyUseCase.execute(dto);
   }
 }
