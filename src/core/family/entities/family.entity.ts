@@ -1,6 +1,6 @@
 import { AutisticChildEntity } from '@/core/autistic/entities/autistic-child.entity';
 import { BaseSchema } from '@/shared/database/schema/base-schema';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany, VirtualColumn } from 'typeorm';
 
 @Entity('family')
 export class FamilyEntity extends BaseSchema {
@@ -69,6 +69,19 @@ export class FamilyEntity extends BaseSchema {
 
   @Column({ name: 'updateToken', type: 'varchar', nullable: true })
   updateToken?: string | null;
+
+  @Column({ name: 'version', type: 'int', nullable: false })
+  version?: number;
+
+  @VirtualColumn({
+    query: (alias) => `
+      SELECT COUNT(*)
+      FROM family f2
+      WHERE f2.respondent_cpf = ${alias}.respondent_cpf
+        AND f2.deleted_at IS NULL
+    `,
+  })
+  versionsCount?: number;
 
   @OneToMany(() => AutisticChildEntity, (child) => child.family)
   autisticChild?: AutisticChildEntity[];

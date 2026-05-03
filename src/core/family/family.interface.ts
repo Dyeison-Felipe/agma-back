@@ -8,5 +8,6 @@ export interface FamilyRepository extends Repository<FamilyEntity> {
   findAllPaginated(
     pagination: PaginationDto,
     cpf?: string,
+    version?: number,
   ): Promise<Pagination<FamilyEntity>>;
 }

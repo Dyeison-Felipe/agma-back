@@ -1,4 +1,5 @@
 import { AutisticChildRepository } from '@/core/autistic/autistic-child.interface';
+import { FamilyEntity } from '@/core/family/entities/family.entity';
 import { FamilyRepository } from '@/core/family/family.interface';
 import { PROVIDERS } from '@/shared/constants/providers';
 import { Transactional } from '@/shared/decorators/transactional.decorator';
@@ -96,6 +97,7 @@ export class UpdateFamilyUseCase implements UseCase<Input, Output> {
 
     const updatedFamily = await this.familyRepository.save({
       ...family,
+      id: crypto.randomUUID(),
       email: input.email,
       respondent: input.respondent,
       respondentOther: input.respondentOther,
@@ -118,6 +120,7 @@ export class UpdateFamilyUseCase implements UseCase<Input, Output> {
       municipalCard: input.municipalCard,
       ciptea: input.ciptea,
       updatedAt: new Date(),
+      version: (family.version ?? 1) + 1,
     });
 
     const updatedChildren = await Promise.all(
@@ -128,7 +131,7 @@ export class UpdateFamilyUseCase implements UseCase<Input, Output> {
 
         return this.autistChildRepository.update({
           ...existingChild,
-          id: child.id,
+          id: crypto.randomUUID(),
           fullName: child.fullName,
           birthDate: child.birthDate,
           gender: child.gender,
@@ -143,7 +146,7 @@ export class UpdateFamilyUseCase implements UseCase<Input, Output> {
           medicationNames: child.medicationNames,
           schoolGrade: child.schoolGrade,
           schoolName: child.schoolName,
-          family: updatedFamily,
+          family: { id: input.id } as FamilyEntity,
           createdAt: existingChild?.createdAt!,
           updatedAt: new Date(),
         });

@@ -6,6 +6,7 @@ import { Pagination } from '@/shared/pagination-repository/pagination';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { SelectQueryBuilder } from 'typeorm/browser';
 
 @Injectable()
 export class FamilyRepositoryImpl implements FamilyRepository {
@@ -18,6 +19,7 @@ export class FamilyRepositoryImpl implements FamilyRepository {
     const family = await this.familyRepository.findOne({
       where: { respondentCpf: cpf },
       relations: ['autisticChild'],
+      order: { version: 'DESC' },
     });
 
     if (!family) return null;
@@ -27,6 +29,7 @@ export class FamilyRepositoryImpl implements FamilyRepository {
   async findAllPaginated(
     pagination: PaginationDto,
     cpf?: string,
+    version?: number,
   ): Promise<Pagination<FamilyEntity>> {
     const queryBuilder = this.familyRepository
       .createQueryBuilder('f')
@@ -36,6 +39,12 @@ export class FamilyRepositoryImpl implements FamilyRepository {
       queryBuilder.where('respondentCpf = :cpf', { cpf });
     }
     queryBuilder.orderBy('f.createdAt', pagination.direction || 'ASC');
+
+    if (version) {
+      queryBuilder.where('version = :version', { version });
+    } else {
+      this.applyMaxVersionPerCpf(queryBuilder);
+    }
 
     const result = await paginateQuery(queryBuilder, pagination);
 
@@ -58,9 +67,13 @@ export class FamilyRepositoryImpl implements FamilyRepository {
   }
 
   async findAll(): Promise<FamilyEntity[]> {
-    const familys = await this.familyRepository.find();
+    const queryBuilder = this.familyRepository.createQueryBuilder('f');
 
-    return familys;
+    this.applyMaxVersionPerCpf(queryBuilder);
+
+    const families = await queryBuilder.getMany();
+
+    return families;
   }
 
   async findById(id: string): Promise<FamilyEntity | null> {
@@ -76,5 +89,20 @@ export class FamilyRepositoryImpl implements FamilyRepository {
 
   async deleteById(id: string): Promise<void> {
     await this.familyRepository.softDelete(id);
+  }
+
+  private applyMaxVersionPerCpf(
+    qb: SelectQueryBuilder<FamilyEntity>,
+  ): SelectQueryBuilder<FamilyEntity> {
+    return qb.innerJoin(
+      (subQb) =>
+        subQb
+          .select('f2.respondentCpf', 'cpf')
+          .addSelect('MAX(f2.version)', 'maxversion')
+          .from(FamilyEntity, 'f2')
+          .groupBy('f2.respondentCpf'),
+      'sub',
+      'sub.cpf = f.respondentCpf AND sub.maxversion = f.version',
+    );
   }
 }

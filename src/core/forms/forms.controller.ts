@@ -5,7 +5,7 @@ import { UpdateFamilyFormDto } from '@/core/forms/dto/update-family.dto';
 import { ValidateFamilyDto } from '@/core/forms/dto/validate-family-cpf.dto';
 import { AdminUpdateFamilyUseCase } from '@/core/forms/usecase/admin-update-family.usecase';
 import { CreateFormUseCase } from '@/core/forms/usecase/create-forms.usecase';
-import { FindAllFamilysPaginatedUseCase } from '@/core/forms/usecase/find-all-familys-paginated.usecase';
+import { FindAllFamilysPaginatedUseCase } from '@/core/forms/usecase/find-all-families-paginated.usecase';
 import { FindFamilyByIdUseCase } from '@/core/forms/usecase/find-family-by-id.usecase';
 import { GenerateTokenUseCase } from '@/core/forms/usecase/generate-token.usecase';
 import { UpdateFamilyUseCase } from '@/core/forms/usecase/update-family.usecase';
@@ -53,9 +53,11 @@ export class FormController {
     @Query('cpf') cpf: string,
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 100,
+    @Query('version') version: number,
   ): Promise<Pagination<FindAllFamilysPaginatePresenter>> {
     return await this.findAllFamilisPaginatedUseCase.execute({
       cpf,
+      version,
       pagination: { limit, page },
     });
   }

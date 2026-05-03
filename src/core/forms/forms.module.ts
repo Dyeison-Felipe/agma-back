@@ -5,7 +5,7 @@ import { FamilyModule } from '@/core/family/family.module';
 import { FormController } from '@/core/forms/forms.controller';
 import { AdminUpdateFamilyUseCase } from '@/core/forms/usecase/admin-update-family.usecase';
 import { CreateFormUseCase } from '@/core/forms/usecase/create-forms.usecase';
-import { FindAllFamilysPaginatedUseCase } from '@/core/forms/usecase/find-all-familys-paginated.usecase';
+import { FindAllFamilysPaginatedUseCase } from '@/core/forms/usecase/find-all-families-paginated.usecase';
 import { FindFamilyByIdUseCase } from '@/core/forms/usecase/find-family-by-id.usecase';
 import { GenerateTokenUseCase } from '@/core/forms/usecase/generate-token.usecase';
 import { UpdateFamilyUseCase } from '@/core/forms/usecase/update-family.usecase';

@@ -9,12 +9,14 @@ import { Inject } from '@nestjs/common';
 
 export type Input = {
   cpf?: string;
+  version?: number;
   pagination: PaginationDto;
 };
 
 type Familys = {
   family: FamilyOutput;
   autisticChildren: AutisticOutput[];
+  versionsCount: number;
 };
 
 export type Output = Pagination<Familys>;
@@ -25,13 +27,15 @@ export class FindAllFamilysPaginatedUseCase implements UseCase<Input, Output> {
     private readonly familyRepository: FamilyRepository,
   ) {}
 
-  async execute({ cpf, pagination }: Input): Promise<Output> {
+  async execute({ cpf, version, pagination }: Input): Promise<Output> {
     const families = await this.familyRepository.findAllPaginated(
       pagination,
       cpf,
+      version,
     );
 
     const items = families.items.map((item) => ({
+      versionsCount: item.versionsCount ?? 1,
       family: {
         id: item.id,
         email: item.email,
@@ -57,6 +61,7 @@ export class FindAllFamilysPaginatedUseCase implements UseCase<Input, Output> {
         ciptea: item.ciptea,
         createdAt: item.createdAt,
         updatedAt: item.updatedAt,
+        currentVersion: item.version,
       } as FamilyOutput,
       autisticChildren: item.autisticChild?.map((child) => ({
         id: child.id,
