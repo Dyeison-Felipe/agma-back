@@ -26,12 +26,12 @@ export class FindAllFamilysPaginatedUseCase implements UseCase<Input, Output> {
   ) {}
 
   async execute({ cpf, pagination }: Input): Promise<Output> {
-    const familys = await this.familyRepository.findAllPaginated(
+    const families = await this.familyRepository.findAllPaginated(
       pagination,
       cpf,
     );
 
-    const items = familys.items.map((item) => ({
+    const items = families.items.map((item) => ({
       family: {
         id: item.id,
         email: item.email,
@@ -81,7 +81,7 @@ export class FindAllFamilysPaginatedUseCase implements UseCase<Input, Output> {
 
     return {
       items,
-      meta: familys.meta,
+      meta: families.meta,
     };
   }
 }

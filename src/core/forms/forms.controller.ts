@@ -2,6 +2,7 @@
 import { AdminUpdateFamilyFormDto } from '@/core/forms/dto/admin-update-family.dto';
 import { CreateFormDto } from '@/core/forms/dto/create-form.dto';
 import { UpdateFamilyFormDto } from '@/core/forms/dto/update-family.dto';
+import { ValidateFamilyDto } from '@/core/forms/dto/validate-family-cpf.dto';
 import { AdminUpdateFamilyUseCase } from '@/core/forms/usecase/admin-update-family.usecase';
 import { CreateFormUseCase } from '@/core/forms/usecase/create-forms.usecase';
 import { FindAllFamilysPaginatedUseCase } from '@/core/forms/usecase/find-all-familys-paginated.usecase';
@@ -59,8 +60,7 @@ export class FormController {
     });
   }
 
-  @Get('generate-link/family/:id')
-  @Public()
+  @Post('generate-link/family/:id')
   @ApiOperation({ summary: 'Gerar token de atualização para a família' })
   @ApiResponse({ status: 200, description: 'Token gerado com sucesso' })
   @ApiResponse({ status: 404, description: 'Família não encontrada' })
@@ -68,17 +68,20 @@ export class FormController {
     return await this.generateTokenUseCase.execute({ id });
   }
 
-  @Get('family/:cpf')
+  @Post('family/cpf/:cpf')
   @Public()
-  @ApiOperation({ summary: 'Buscar família por CPF' })
+  @ApiOperation({ summary: 'Valida família pelo CPF' })
   @ApiResponse({
     status: 200,
     type: FindFamilyPresenter,
     description: 'Família encontrada',
   })
   @ApiResponse({ status: 404, description: 'Família não encontrada' })
-  async getFamily(@Param('cpf') cpf: string): Promise<FindFamilyPresenter> {
-    return await this.findFamilyByIdUseCase.execute({ cpf });
+  async validateFamilyCpf(
+    @Param('cpf') cpf: string,
+    @Body() dto: ValidateFamilyDto,
+  ): Promise<FindFamilyPresenter> {
+    return await this.findFamilyByIdUseCase.execute({ cpf, token: dto.token });
   }
 
   @Put()
