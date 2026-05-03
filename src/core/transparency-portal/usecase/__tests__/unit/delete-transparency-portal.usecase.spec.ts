@@ -4,13 +4,16 @@ import type { TransparencyTypeRepository } from '@/core/transparency-type/transp
 import { NotFoundError } from '@/shared/errors/not-found-error';
 import type { SupabaseService } from '@/shared/supabase/supabase.interface';
 
-const mockTransparencyType = { id: 'type-id-123', name: 'contracts' };
+jest.mock('@/shared/decorators/transactional.decorator', () => ({
+  Transactional:
+    () => (_target: any, _key: string, descriptor: PropertyDescriptor) =>
+      descriptor,
+}));
 
 const mockDocument = {
   id: 'doc-id-456',
   name: 'file.pdf',
   path: 'contracts/file.pdf',
-  transparencyType: mockTransparencyType,
 };
 
 const makeSut = () => {
@@ -24,7 +27,7 @@ const makeSut = () => {
   } as unknown as jest.Mocked<TransparencyPortalRepository>;
 
   const transparencyTypeRepository = {
-    findById: jest.fn().mockResolvedValue(mockTransparencyType),
+    findById: jest.fn(),
   } as unknown as jest.Mocked<TransparencyTypeRepository>;
 
   const supabaseService = {
@@ -46,48 +49,11 @@ const makeSut = () => {
   };
 };
 
-jest.mock('@/shared/decorators/transactional.decorator');
 describe('DeleteDocumentTransparencyPortalUseCase', () => {
-  const defaultInput = {
-    typeId: mockTransparencyType.id,
-    documentId: mockDocument.id,
-  };
-
-  describe('Transparency type validation', () => {
-    it('should throw NotFoundError when the transparency type does not exist', async () => {
-      const { sut, transparencyTypeRepository } = makeSut();
-      transparencyTypeRepository.findById.mockResolvedValueOnce(null);
-
-      await expect(sut.execute(defaultInput)).rejects.toThrow(
-        new NotFoundError('Tipo de transparência não encontrado'),
-      );
-    });
-
-    it('should call findById with the provided typeId', async () => {
-      const { sut, transparencyTypeRepository } = makeSut();
-
-      await sut.execute(defaultInput);
-
-      expect(transparencyTypeRepository.findById).toHaveBeenCalledWith(
-        defaultInput.typeId,
-      );
-    });
-
-    it('should not look up the document when the transparency type is not found', async () => {
-      const { sut, transparencyTypeRepository, transparencyPortalRepository } =
-        makeSut();
-      transparencyTypeRepository.findById.mockResolvedValueOnce(null);
-
-      await expect(sut.execute(defaultInput)).rejects.toThrow();
-
-      expect(
-        transparencyPortalRepository.findDocumentByTypeIdAndDocumentId,
-      ).not.toHaveBeenCalled();
-    });
-  });
+  const defaultInput = { documentId: mockDocument.id };
 
   describe('Document validation', () => {
-    it('should throw NotFoundError when the document does not exist for the given type', async () => {
+    it('should throw NotFoundError when the document does not exist', async () => {
       const { sut, transparencyPortalRepository } = makeSut();
       transparencyPortalRepository.findDocumentByTypeIdAndDocumentId.mockResolvedValueOnce(
         null,
@@ -100,14 +66,14 @@ describe('DeleteDocumentTransparencyPortalUseCase', () => {
       );
     });
 
-    it('should call findDocumentByTypeIdAndDocumentId with the type id and document id', async () => {
+    it('should call findDocumentByTypeIdAndDocumentId with the document id', async () => {
       const { sut, transparencyPortalRepository } = makeSut();
 
       await sut.execute(defaultInput);
 
       expect(
         transparencyPortalRepository.findDocumentByTypeIdAndDocumentId,
-      ).toHaveBeenCalledWith(mockTransparencyType.id, mockDocument.id);
+      ).toHaveBeenCalledWith(mockDocument.id);
     });
 
     it('should not call deleteFileByUrl when the document is not found', async () => {
@@ -177,23 +143,6 @@ describe('DeleteDocumentTransparencyPortalUseCase', () => {
       const result = await sut.execute(defaultInput);
 
       expect(result).toBeUndefined();
-    });
-  });
-
-  describe('Execution order', () => {
-    it('should use the type id from the found transparency type, not directly from the input', async () => {
-      const { sut, transparencyTypeRepository, transparencyPortalRepository } =
-        makeSut();
-      const resolvedType = { ...mockTransparencyType, id: 'resolved-type-id' };
-      transparencyTypeRepository.findById.mockResolvedValueOnce(
-        resolvedType as any,
-      );
-
-      await sut.execute(defaultInput);
-
-      expect(
-        transparencyPortalRepository.findDocumentByTypeIdAndDocumentId,
-      ).toHaveBeenCalledWith('resolved-type-id', mockDocument.id);
     });
   });
 });

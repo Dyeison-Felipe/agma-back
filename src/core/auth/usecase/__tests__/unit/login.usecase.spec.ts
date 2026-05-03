@@ -173,7 +173,6 @@ describe('LoginUseCase', () => {
           httpOnly: true,
           maxAge: 3600,
           path: '/',
-          domain: 'localhost',
           secure: false,
           sameSite: 'lax',
         },
@@ -186,7 +185,7 @@ describe('LoginUseCase', () => {
       await sut.execute({ ...defaultInput, setCookie });
 
       expect(envConfigService.getJwtExpiresInSeconds).toHaveBeenCalled();
-      expect(envConfigService.getCookieDomain).toHaveBeenCalled();
+      // expect(envConfigService.getCookieDomain).toHaveBeenCalled();
       expect(envConfigService.getCookieSecure).toHaveBeenCalled();
       expect(envConfigService.getCookieSameSite).toHaveBeenCalled();
     });
