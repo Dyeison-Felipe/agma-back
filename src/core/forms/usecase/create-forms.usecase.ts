@@ -70,7 +70,9 @@ export class CreateFormUseCase implements UseCase<Input, Output> {
     );
 
     if (existFamily) {
-      throw new ConflictError(`Essa família já está cadastrada`);
+      throw new ConflictError(
+        `Essa família já está cadastrada com o CPF informado`,
+      );
     }
 
     const cpfClean = isValidCPF(input.respondentCpf);
